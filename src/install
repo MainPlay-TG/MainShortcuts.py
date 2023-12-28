@@ -1,0 +1,2 @@
+py setup.py sdist
+pip install dist/MainShortcuts-1.0.tar.gz
