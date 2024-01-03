@@ -1,18 +1,19 @@
 # MainShortcuts by MainPlay YT
 # https://t.me/MainPlay_YT
 import MainShortcuts.addon as _a
-import json as _j
-import os as _o
-import platform as _p
-import sys as _s
-from glob import glob as _g
+import json as _json
+import os as _os
+import platform as _platform
+import sys as _sys
+import shutil as _shutil
+from glob import glob as _glob
 # Универсальные команды
 class mproc:
-  args=_s.argv # Аргументы запуска программы
+  args=_sys.argv # Аргументы запуска программы
 class mpath: # Операции с путями к файлам/папкам
-  sep=_o.sep # Разделитель в пути файла
+  sep=_os.sep # Разделитель в пути файла
   def exists(a): # Объект существует?
-    return _o.path.exists(a)
+    return _os.path.exists(a)
   def merge(a): # Собрать путь к объекту из массива
     return mpath.sep.join(a)
   def split(a): # Разложить путь к объекту на массив
@@ -31,14 +32,14 @@ class mpath: # Операции с путями к файлам/папкам
       info["name"]=info["fullname"]
     info["exists"]=mpath.exists(a)
     if info["exists"]:
-      info["fullpath"]=_o.path.abspath(a)
-      info["link"]=_o.path.islink(a)
+      info["fullpath"]=_os.path.abspath(a)
+      info["link"]=_os.path.islink(a)
       if info["link"]:
-        info["realpath"]=_o.path.realpath(a)
-      if _o.path.isfile(a):
-        info["size"]=_o.path.getsize(a)
+        info["realpath"]=_os.path.realpath(a)
+      if _os.path.isfile(a):
+        info["size"]=_os.path.getsize(a)
         info["type"]="file"
-      elif _o.path.isdir(a):
+      elif _os.path.isdir(a):
         info["type"]="dir"
         if listdir:
           tmp=_a.listdir(a)
@@ -48,17 +49,48 @@ class mpath: # Операции с путями к файлам/папкам
       else:
         info["type"]="unknown"
     return info
+  def delete(p):
+    info=mpath.info(p)
+    if info["exists"]:
+      if info["type"]=="file":
+        _os.remove(p)
+      elif info["type"]=="dir":
+        _os.rmdir(p)
+      else:
+        raise Exception("Unknown type: "+info["type"])
+  def copy(fr,to):
+    t=mpath.info(fr)["type"]
+    if t=="file":
+      _shutil.copy(fr,to)
+    if t=="dir":
+      _shutil.copytree(fr,to)
+    else:
+      raise Exception("Unknown type: "+t)
+  def move(fr,to):
+    _shutil.move(fr,to)
+  def rename(fr,to):
+    _os.rename(fr,to)
+  def link(fr,to,force=False):
+    if mpath.exists(to) and force:
+      mpath.delete(to)
+    os.symlink(fr,to)
+  def format(a,b="_"):
+    for i in ["/","\\"]:
+      a=a.replace(i,mpath.sep)
+    for i in ["\n",":","*","?","\"","<",">","|","+","%","!","@"]:
+      a=a.replace(i,b)
+    return a
 class mos: # Операции с системой
-  platform=_p.system() # Тип ОС
+  platform=_platform.system() # Тип ОС
 def exit(code=0): # Закрытие программы с кодом
-  _s.exit(code)
+  _sys.exit(code)
 class mvar: # Операции с переменныии
   def procSet(name="MainShortcutsTMP",value=None):
-    _o.environ[name]=value
+    _os.environ[name]=value
     return True
   def procGet(name="MainShortcutsTMP"):
-    return _o.environ[name]
-  proc=_o.environ
+    return _os.environ[name]
+  proc=_os.environ
 class mfile: # Операции с файлами
   def read(p,encoding="utf-8"): # Прочитать текстовый файл
     if mpath.info(p)["type"]=="file":
@@ -69,12 +101,12 @@ class mfile: # Операции с файлами
     return t
   def write(p,text="",encoding="utf-8",force=False): # Записать текстовый файл
     if mpath.info(p)["type"]=="dir" and force:
-      _o.remove(p)
+      _os.remove(p)
     with open(p,"w",encoding=encoding) as f:
       f.write(f"{text}")
     return True
   def open(p): # Открыть содержимое файла
-    if _o.path.exists(p):
+    if _os.path.exists(p):
       with open(p,"rb") as f:
         b=f.read()
     else:
@@ -82,15 +114,63 @@ class mfile: # Операции с файлами
     return b
   def save(p,bin=None,force=False): # Сохранить содержимое файла
     if mpath.info(p)["type"]=="dir" and force:
-      _o.remove(p)
+      _os.remove(p)
     with open(p,"wb") as f:
       f.write(bin)
     return True
+  def delete(p):
+    t=mpath.info(p)["type"]
+    if t=="file":
+      _os.remove(p)
+    else:
+      raise Exception("Unknown type: "+t)
+  def copy(fr,to):
+    t=mpath.info(p)["type"]
+    if t=="file":
+      _shutil.copy(fr,to)
+    else:
+      raise Exception("Unknown type: "+t)
+  def move(fr,to):
+    t=mpath.info(p)["type"]
+    if t=="file":
+      _shutil.move(fr,to)
+    else:
+      raise Exception("Unknown type: "+t)
+  def rename(fr,to):
+    t=mpath.info(p)["type"]
+    if t=="file":
+      _os.rename(fr,to)
+    else:
+      raise Exception("Unknown type: "+t)
 class mdir: # Операции с папками
   def create(p): # Создать папку
     if not mpath.exists(p):
-      _o.makedirs(p)
+      _os.makedirs(p)
     return True
+  def delete(p):
+    t=mpath.info(p)["dir"]
+    if t=="file":
+      _os.rmdir(p)
+    else:
+      raise Exception("Unknown type: "+t)
+  def copy(fr,to):
+    t=mpath.info(p)["dir"]
+    if t=="file":
+      _shutil.copytree(fr,to)
+    else:
+      raise Exception("Unknown type: "+t)
+  def move(fr,to):
+    t=mpath.info(p)["dir"]
+    if t=="file":
+      _shutil.move(fr,to)
+    else:
+      raise Exception("Unknown type: "+t)
+  def rename(fr,to):
+    t=mpath.info(p)["dir"]
+    if t=="file":
+      _os.rename(fr,to)
+    else:
+      raise Exception("Unknown type: "+t)
 class mstr: # Операции с текстом
   def array2str(a):
     r=[]
@@ -120,30 +200,30 @@ class mstr: # Операции с текстом
 class mjson: # Операции с JSON
   def encode(data=None,mode="c",indent=2,sort=True): # Данные в текст
     if mode in ["c","compress","min","zip"]: # Сжатый
-      t=_j.dumps(data,separators=[",",":"],sort_keys=sort)
+      t=_json.dumps(data,separators=[",",":"],sort_keys=sort)
     elif mode in ["pretty","p","print","max"]: # Развёрнутый
-      t=_j.dumps(data,indent=int(indent),sort_keys=sort)
+      t=_json.dumps(data,indent=int(indent),sort_keys=sort)
     else: # Без параметров
-      t=_j.dumps(data,sort_keys=sort)
+      t=_json.dumps(data,sort_keys=sort)
     return t
   def decode(text): # Текст в данные
-    return _j.loads(str(text))
+    return _json.loads(str(text))
   def write(p=None,data=None,encoding="utf-8",mode="c",indent=2,sort=True,force=False): # Данные в файл
     if mpath.info(p)["type"]=="dir" and force:
-      _o.remove(p)
+      _os.remove(p)
     with open(p,"w",encoding=encoding) as f:
       f.write(mjson.encode(data,mode=mode,indent=indent,sort=sort))
     return True
   def read(p,encoding="utf-8"): # Данные из файла
     with open(p,"r",encoding=encoding) as f:
-      return _j.load(f)
+      return _json.load(f)
 # Команды для разных ОС
 if mos.platform=="Windows": # Windows
   def clear():
-    _o.system("cls")
+    _os.system("cls")
 elif mos.platform=="Linux": # Linux
   def clear():
-    _o.system("clear")
+    _os.system("clear")
 elif mos.platform=="Darwin": # MacOS
   pass
 else: # Неизвестный тип
