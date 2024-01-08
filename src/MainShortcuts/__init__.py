@@ -5,5 +5,4 @@ json=mjson
 os=mos
 path=mpath
 str=mstr
-var=mvar
 proc=mproc

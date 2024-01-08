@@ -18,7 +18,7 @@ class mpath: # Операции с путями к файлам/папкам
     return mpath.sep.join(a)
   def split(a): # Разложить путь к объекту на массив
     return a.split(mpath.sep)
-  def info(a,listdir=False):
+  def info(a,listdir=False,listlinks=False):
     info={"dir":None,"size":None,"exists":None,"ext":None,"fullname":None,"fullpath":None,"link":None,"name":None,"path":None,"realpath":None,"split":[],"type":None,}
     info["path"]=a
     info["split"]=mpath.split(a)
@@ -42,7 +42,7 @@ class mpath: # Операции с путями к файлам/папкам
       elif _os.path.isdir(a):
         info["type"]="dir"
         if listdir:
-          tmp=_a.listdir(a)
+          tmp=_a.listdir(a,listlinks)
           info["dirs"]=tmp["d"]
           info["files"]=tmp["f"]
           info["size"]=tmp["s"]
@@ -62,7 +62,7 @@ class mpath: # Операции с путями к файлам/папкам
     t=mpath.info(fr)["type"]
     if t=="file":
       _shutil.copy(fr,to)
-    if t=="dir":
+    elif t=="dir":
       _shutil.copytree(fr,to)
     else:
       raise Exception("Unknown type: "+t)
@@ -84,13 +84,6 @@ class mos: # Операции с системой
   platform=_platform.system() # Тип ОС
 def exit(code=0): # Закрытие программы с кодом
   _sys.exit(code)
-class mvar: # Операции с переменныии
-  def procSet(name="MainShortcutsTMP",value=None):
-    _os.environ[name]=value
-    return True
-  def procGet(name="MainShortcutsTMP"):
-    return _os.environ[name]
-  proc=_os.environ
 class mfile: # Операции с файлами
   def read(p,encoding="utf-8"): # Прочитать текстовый файл
     if mpath.info(p)["type"]=="file":

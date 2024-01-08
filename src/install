@@ -1,3 +1,0 @@
-py setup.py sdist
-pip install dist/MainShortcuts-*
-mv dist/* ../dist/

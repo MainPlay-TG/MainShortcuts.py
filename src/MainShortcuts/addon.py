@@ -1,5 +1,5 @@
 import os as _o
-def listdir(a):
+def listdir(a,listlinks):
   s=0
   f=[]
   d=[]
@@ -11,9 +11,10 @@ def listdir(a):
         s+=_o.path.getsize(i)
     if _o.path.isdir(i):
       d.append(i)
-      m=listdir(i)
-      if not _o.path.islink(i):
-        s+=m["s"]
-      f=f+m["f"]
-      d=d+m["d"]
+      if listlinks or not _o.path.islink(i):
+        m=listdir(i)
+        if not _o.path.islink(i):
+          s+=m["s"]
+        f+=m["f"]
+        d+=m["d"]
   return {"s":s,"f":f,"d":d}
