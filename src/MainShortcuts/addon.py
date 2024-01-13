@@ -12,7 +12,7 @@ def listdir(a,listlinks):
     if _o.path.isdir(i):
       d.append(i)
       if listlinks or not _o.path.islink(i):
-        m=listdir(i)
+        m=listdir(i,listlinks)
         if not _o.path.islink(i):
           s+=m["s"]
         f+=m["f"]
