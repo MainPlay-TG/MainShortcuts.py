@@ -14,7 +14,7 @@ try:
 except Exception as e:
   noimport["pickle"]=e
 try:
-  import cPickle
+  import _pickle as cPickle
 except Exception as e:
   noimport["cPickle"]=e
 try:
@@ -52,10 +52,15 @@ def _checkImport(type):
     return False
   else:
     return True
+def _dict_update(a,b):
+  for k,v in b.items():
+    a[k]=v
+  return a
 class cfg:
   # Код
   def __init__(self,path,
     data=None,
+    default={},
     type="auto", # "auto" - определение по расширению файла
     json_args={},
     pickle_args={},
@@ -89,6 +94,7 @@ class cfg:
     self.byte_args={}
     self.path=path
     self.data=data
+    self.default=default
     self.type=_checkType(path,type)
     _checkImport(self.type)
     self.json_args.update(json_args)
@@ -97,6 +103,10 @@ class cfg:
     self.toml_args.update(toml_args)
     self.text_args.update(text_args)
     self.byte_args.update(byte_args)
+  def __getitem__(self,k):
+    return self.data[k]
+  def __setitem__(self,k,v):
+    self.data[k]=v
   def load(self,path=None,type=None,json_args={},pickle_args={},toml_args={},text_args={}):
     # Загрузка из файла
     if path==None:
@@ -134,8 +144,11 @@ class cfg:
       self.data=file.read(path,encoding=args["encoding"])
     elif type=="byte":
       self.data=file.open(path)
+    if isinstance(self.data,dict):
+      self.data=_dict_update(self.default,self.data)
     return self.data
   def save(self,path=None,type=None,json_args={},pickle_args={},cPickle_args={},toml_args={},text_args={}):
+    # Сохранение в файл
     if path==None:
       path=self.path
     if type==None:
@@ -172,3 +185,11 @@ class cfg:
       file.write(path,self.data,encoding=args["encoding"])
     elif type=="byte":
       file.save(path,self.data)
+  def set_default(self,data=None):
+    if data==None:
+      data=self.data
+    self.data=_dict_update(self.default,data)
+    return self.data
+  read=load
+  open=load
+  write=save

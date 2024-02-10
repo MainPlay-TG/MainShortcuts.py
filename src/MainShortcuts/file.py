@@ -1,9 +1,10 @@
 import MainShortcuts.path as m_path
+import codecs as _codecs
 import os as _os
 import shutil as _shutil
 def read(path,encoding="utf-8"): # Прочитать текстовый файл
   if m_path.info(path)["type"]=="file":
-    with open(path,"r",encoding=encoding) as f:
+    with _codecs.open(path,"r",encoding=encoding) as f:
       text=f.read()
   else:
     text=""
@@ -11,8 +12,8 @@ def read(path,encoding="utf-8"): # Прочитать текстовый фай�
 def write(path,text="",encoding="utf-8",force=False): # Записать текстовый файл
   if m_path.info(path)["type"]=="dir" and force:
     _os.remove(path)
-  with open(path,"w",encoding=encoding) as f:
-    f.write(f"{text}")
+  with _codecs.open(path,"w",encoding=encoding) as f:
+    f.write(str(text))
   return True
 def open(path): # Открыть содержимое файла
   if _os.path.exists(path):
@@ -28,8 +29,8 @@ def save(path,content,force=False): # Сохранить содержимое ф
     f.write(content)
   return True
 def delete(path):
-  typt=m_path.info(path)["type"]
-  if typt=="file":
+  type=m_path.info(path)["type"]
+  if type=="file":
     _os.remove(path)
   else:
     raise Exception("Unknown type: "+typt)

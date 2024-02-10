@@ -12,12 +12,14 @@ def create(path,force=False): # Создать папку
       raise Exception("The object exists and is not a folder")
   _os.makedirs(path)
   return True
+mk=create
 def delete(path):
   type=m_path.info(path)["type"]
   if type=="dir":
-    _os.rmdir(path)
+    _shutil.rmtree(path)
   else:
     raise Exception("Unknown type: "+type)
+rm=delete
 def copy(fr,to,force=False):
   type=m_path.info(fr)["dir"]
   if type=="dir":
@@ -29,6 +31,7 @@ def copy(fr,to,force=False):
     _shutil.copytree(fr,to)
   else:
     raise Exception("Unknown type: "+type)
+cp=copy
 def move(fr,to,force=False):
   type=m_path.info(fr)["dir"]
   if type=="dir":
