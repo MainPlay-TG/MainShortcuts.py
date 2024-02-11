@@ -1,20 +1,20 @@
-__version_tuple__=(1,6,37)
+__version_tuple__=(1,6,43)
 # Данные о модуле
 __version__="{}.{}.{}".format(*__version_tuple__)
 __depends__={
   "required":[
-    "codecs",
     "json",
     "os",
     "platform",
     "shutil",
     "subprocess",
-    "sys"
+    "sys",
     ],
   "optional":[
     "cPickle",
+    "hashlib",
     "pickle",
-    "toml"
+    "toml",
     ]
   }
 __functions__=[
@@ -65,7 +65,7 @@ __functions__=[
   "str.array2str",
   "str.dict2str",
   "str.replace.all",
-  "str.replace.multi"
+  "str.replace.multi",
   ]
 __variables__=[
   "os.platform",
@@ -73,13 +73,14 @@ __variables__=[
   "path.sep",
   "path.separator",
   "proc.args",
-  "proc.pid"
+  "proc.pid",
   ]
 __scripts__=[
-  "MS-jsonP",
+  "MS-getCore",
+  "MS-getCoreMini",
   "MS-jsonC",
+  "MS-jsonP",
   "MS-mkdir",
-  "MS-getCore"
   ]
 __classes__={
   "cfg":{
@@ -94,24 +95,32 @@ __classes__={
       "byte_args",
       "cPickle_args",
       "data",
+      "default",
       "json_args",
       "path",
-      "default",
       "pickle_args",
       "text_args",
       "toml_args",
       "type"
       ]
+    },
+  "fileobj":{
+    "functions":[],
+    "variables":[]
     }
   }
 __all__=__functions__+__variables__+list(__classes__.keys())
 __functions__.sort()
-__variables__.sort()
 __scripts__.sort()
+__variables__.sort()
 __all__.sort()
 # Импорт
 try:
   from MainShortcuts.cfg import cfg
+except Exception as error:
+  print(error)
+try:
+  from MainShortcuts.fileobj import fileobj
 except Exception as error:
   print(error)
 try:

@@ -62,6 +62,8 @@ def info(path=_os.getcwd(),listdir=False,listlinks=False,sep=pathsep): # Инф�
 def delete(path): # Удалить
   inf=info(path)
   if inf["exists"]:
+    if _os.path.islink(path):
+      os.unlink(path)
     if inf["type"]=="file":
       _os.remove(path)
     elif inf["type"]=="dir":
