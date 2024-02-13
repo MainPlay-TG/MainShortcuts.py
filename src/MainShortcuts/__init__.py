@@ -1,4 +1,4 @@
-__version_tuple__=(1,6,43)
+__version_tuple__=(1,6,49)
 # Данные о модуле
 __version__="{}.{}.{}".format(*__version_tuple__)
 __depends__={
@@ -107,7 +107,25 @@ __classes__={
   "fileobj":{
     "functions":[],
     "variables":[]
-    }
+    },
+  "path.recurse_info":{
+    "functions":[],
+    "variables":[]
+    },
+  "matrix":{
+    "functions":[
+      "get",
+      "reload",
+      "slice",
+      ],
+    "variables":[
+      "sizeX",
+      "sizeY",
+      "mode",
+      "empty",
+      "data",
+      ]
+    },
   }
 __all__=__functions__+__variables__+list(__classes__.keys())
 __functions__.sort()
@@ -121,6 +139,10 @@ except Exception as error:
   print(error)
 try:
   from MainShortcuts.fileobj import fileobj
+except Exception as error:
+  print(error)
+try:
+  from MainShortcuts.matrix import matrix
 except Exception as error:
   print(error)
 try:

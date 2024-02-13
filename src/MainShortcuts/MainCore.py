@@ -1,45 +1,43 @@
 import os, traceback
 import MainShortcuts as ms
-class _dictplus_storage:
-  def __init__(self):
-    self.d={}
 class dictplus:
-  def __init__(self,data={}):
-    self._s=_dictplus_storage()
-    self._s.d=data
-    def __getattr__(self,k):
-      if k=="__data__":
-        return self._s.d
-      else:
-        return self._s.d[k]
-    def __setattr__(self,k,v):
-      if k=="__data__":
-        self._s.d=v
-      else:
-        self._s.d[k]=v
-    self.__getattr__=__getattr__
-    self.__setattr__=__setattr__
+  def __init__(self,data=None):
+    if data==None:
+      self.__data__={}
+    else:
+      self.__data__=data
+  def __getattr__(self,k):
+    if k=="__data__":
+      return self.__dict__[k]
+    else:
+      return self[k]
+  def __setattr__(self,k,v):
+    if k=="__data__":
+      self.__dict__[k]=v
+    else:
+      self[k]=v
   def __repr__(self):
-    return f"dictplus({str(self._s.d)})"
+    return f"dictplus({str(self.__data__)})"
   def __dir__(self):
-    return list(self._s.d.keys())+["__data__"]
+    return list(self.__data__.keys())+["__data__"]
   def __len__(self):
-    return len(self._s.d.keys())
+    return len(self.__data__.keys())
   def __contains__(self,k):
-    return (k in self._s.d)
+    return (k in self.__data__)
+  __hasattr__=__contains__
   def __eq__(self,o):
     if type(o)==dict:
-      return self._s.d==o
+      return self.__data__==o
     else:
-      return self._s.d==o.__data__
+      return self.__data__==o.__data__
   def __getitem__(self,k):
-    return self._s.d[k]
+    return self.__dict__["__data__"][k]
   def __setitem__(self,k,v):
-    self._s.d[k]=v
+    self.__dict__["__data__"][k]=v
   def __delitem__(self,k):
-    self._s.d.pop(k)
+    self.__dict__["__data__"].pop(k)
   def __delattr__(self,k):
-    self._s.d.pop(k)
+    self.__dict__["__data__"].pop(k)
 class _MainCore:
   def __init__(self,color=True,__name__=__name__,__file__=__file__):
     """Параметры:
@@ -47,7 +45,7 @@ class _MainCore:
   __name__ и __file__ - укажите если импортируете MainCore из модуля. Если вы записали его в начало файла - не трогайте"""
     self.args=ms.proc.args # Все аргументы запуска (то же самое, что и sys.argv)
     self.core_name="MainCore"
-    self.core_version=1
+    self.core_version=2
     self.dir=ms.path.info(__file__)["dir"] # Папка, в которой находится программа
     self.exception=traceback.format_exc
     self.pid=os.getpid() # PID программы
@@ -110,7 +108,7 @@ class _MainCore:
       return target(*args,**kwargs)
     except:
       return self.exception()
-if __name__=="__main__":
-  mcore=_MainCore()
-  cprint=mcore.cprint
-  cformat=mcore.cformat
+mcore=_MainCore()
+cprint=mcore.cprint
+cformat=mcore.cformat
+globals=dictplus()

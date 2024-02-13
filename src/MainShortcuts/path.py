@@ -3,15 +3,18 @@ import os as _os
 import shutil as _shutil
 sep=_os.sep # Разделитель в пути файла
 extsep=_os.extsep # Разделитель в расширении файла
-separator=sep
 pathsep=sep
+separator=sep
+pwd=_os.getcwd
+cd=_os.chdir
 def exists(path): # Объект существует?
   return _os.path.exists(path)
 def merge(array,sep=pathsep): # Собрать путь к объекту из массива
   return sep.join(array)
 def split(path,sep=pathsep): # Разложить путь к объекту на массив
   return path.split(sep)
-def info(path=_os.getcwd(),listdir=False,listlinks=False,sep=pathsep): # Информация о пути
+def info(path=_os.getcwd(),listdir=False,listlinks=False): # Информация о пути
+  path=path.replace("\\","/")
   i={
     "dir":None, # Папка, в которой находится объект
     "dirs":None, # Рекурсивный список папок (если аргумент listdir=True)
@@ -30,9 +33,8 @@ def info(path=_os.getcwd(),listdir=False,listlinks=False,sep=pathsep): # Инф�
     "type":None # Тип объекта | "file"/"dir"
     }
   i["path"]=path
-  i["split"]=split(path)
-  i["dir"]=merge(i["split"][:-1])
-  i["fullname"]=_os.path.basename(path)
+  i["split"]=path.split("/")
+  i["dir"],i["fullname"]=_os.path.split(path)
   i["fullpath"]=_os.path.abspath(path)
   i["relpath"]=_os.path.relpath(path)
   if "." in i["fullname"]:
@@ -59,11 +61,48 @@ def info(path=_os.getcwd(),listdir=False,listlinks=False,sep=pathsep): # Инф�
     else:
       i["type"]="unknown"
   return i
+class recurse_info:
+  def __init__(self,p=_os.getcwd(),links=False):
+    self.path=p
+    for k,v in info(p,listdir=True,listlinks=links).items():
+      self[k]=v
+    if self.type=="dir":
+      f={}
+      d={}
+      for i in self.files:
+        f[i]=info(i)
+      for i in self.dirs:
+        d[i]=info(i)
+      self.files=f
+      self.dirs=d
+  def __repr__(self):
+    return f"ms.recurse_info('{self.path}')"
+  def __bool__(self):
+    return self.exists
+  def __getitem__(self,k):
+    return getattr(self,k)
+  def __setitem__(self,k,v):
+    setattr(self,k,v)
+  def __delitem__(self,k):
+    delattr(self,k)
+  def __eq__(self,other):
+    try:
+      myD={}
+      otD={}
+      for k in dir(self):
+        if not k.startswith("_"):
+          myD[k]=self[k]
+      for k in dir(other):
+        if not k.startswith("_"):
+          otD[k]=other[k]
+      return myD==otD
+    except:
+      return False
 def delete(path): # Удалить
   inf=info(path)
   if inf["exists"]:
     if _os.path.islink(path):
-      os.unlink(path)
+      _os.unlink(path)
     if inf["type"]=="file":
       _os.remove(path)
     elif inf["type"]=="dir":
