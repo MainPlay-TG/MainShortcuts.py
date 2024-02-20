@@ -4,8 +4,9 @@ import MainShortcuts.os as m_os
 import os as _os
 import sys as _sys
 # Универсальные команды
-def exit(code=0): # Закрытие программы с кодом
-  _sys.exit(code)
+exit=_sys.exit
+cd=_os.chdir
+pwd=_os.getcwd
 # Команды для разных ОС
 if m_os.platform=="Windows": # Windows
   def clear():

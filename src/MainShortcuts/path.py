@@ -30,24 +30,38 @@ def info(path=_os.getcwd(),listdir=False,listlinks=False): # Информаци�
     "relpath":None, # Относительный путь
     "size":None, # Размер. Для получения размера папки укажите аргумент listdir=True
     "split":[], # Путь, разделённый на массив
-    "type":None # Тип объекта | "file"/"dir"
+    "type":None, # Тип объекта | "file"/"dir"
+    "errors":{}, # Параметры, при получении которых возникла ошибка
     }
+  errors={}
   i["path"]=path
   i["split"]=path.split("/")
   i["dir"],i["fullname"]=_os.path.split(path)
-  i["fullpath"]=_os.path.abspath(path)
-  i["relpath"]=_os.path.relpath(path)
+  try:
+    i["fullpath"]=_os.path.abspath(path)
+  except Exception as e:
+    errors["fullpath"]=e
+  try:
+    i["relpath"]=_os.path.relpath(path)
+  except Exception as e:
+    errors["relpath"]=e
   if "." in i["fullname"]:
     i["ext"]=i["fullname"].split(".")[-1]
     i["name"]=".".join(i["fullname"].split(".")[:-1])
   else:
     i["ext"]=None
     i["name"]=i["fullname"]
-  i["exists"]=exists(path)
+  try:
+    i["exists"]=exists(path)
+  except Exception as e:
+    errors["exists"]=e
   if i["exists"]:
     i["link"]=_os.path.islink(path)
     if i["link"]:
-      i["realpath"]=_os.path.realpath(path)
+      try:
+        i["realpath"]=_os.path.realpath(path)
+      except Exception as e:
+        errors["realpath"]=e
     if _os.path.isfile(path):
       i["size"]=_os.path.getsize(path)
       i["type"]="file"
@@ -60,6 +74,7 @@ def info(path=_os.getcwd(),listdir=False,listlinks=False): # Информаци�
         i["size"]=tmp["s"]
     else:
       i["type"]="unknown"
+  i["errors"]=errors
   return i
 class recurse_info:
   def __init__(self,p=_os.getcwd(),links=False):

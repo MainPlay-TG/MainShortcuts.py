@@ -40,13 +40,10 @@ class dictplus:
     self.__dict__["__data__"].pop(k)
 class _MainCore:
   def __init__(self,color=True,__name__=__name__,__file__=__file__):
-    """Параметры:
-  color - разрешить цветной текст (по умолчанию: True)
-  __name__ и __file__ - укажите если импортируете MainCore из модуля. Если вы записали его в начало файла - не трогайте"""
     self.args=ms.proc.args # Все аргументы запуска (то же самое, что и sys.argv)
     self.core_name="MainCore"
-    self.core_version=2
-    self.dir=ms.path.info(__file__)["dir"] # Папка, в которой находится программа
+    self.core_version=4
+    self.dir=os.path.dirname(__file__) # Папка, в которой находится программа
     self.exception=traceback.format_exc
     self.pid=os.getpid() # PID программы
     self.run=__name__=="__main__" # Запущена программа или её импортируют?
@@ -93,11 +90,29 @@ class _MainCore:
         color=False
   def __repr__(self):
     return ms.json.encode({"name":self.core_name,"version":self.core_version},mode="c")
-  def cprint(self,a,start=""): # Вывести цветной текст | cprint("Обычный текст, {BLUE}Синий текст")
-    b=str(a).rstrip().format(**self.colors)
-    print(self.colors["RESET"]+self.colors[start]+b.rstrip()+self.colors["RESET"])
+  def cprint(self,a,start="",**kwargs): # Вывести цветной текст | cprint("Обычный текст, {BLUE}Синий текст")
+    try:
+      b=str(a).rstrip().format(**self.colors)
+    except KeyError:
+      b=str(a).rstrip()
+      for k,v in self.colors.items():
+        try:
+          arg={k:v}
+          b=b.format(**arg)
+        except KeyError:
+          pass
+    print(self.colors["RESET"]+self.colors[start]+b.rstrip()+self.colors["RESET"],**kwargs)
   def cformat(self,a,start=""): # Аналогично cprint, но вывод в return, и нет strip
-    b=str(a).format(**self.colors)
+    try:
+      b=str(a).format(**self.colors)
+    except KeyError:
+      b=str(a).rstrip()
+      for k,v in self.colors.items():
+        try:
+          arg={k:v}
+          b=b.format(**arg)
+        except KeyError:
+          pass
     return self.colors["RESET"]+self.colors[start]+b+self.colors["RESET"]
   def ctest(self): # Вывод всех доступных цветов
     for k,v in self.colors.items():

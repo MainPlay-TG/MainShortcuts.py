@@ -1,5 +1,12 @@
-__version_tuple__=(1,6,49)
+"""MainShortcuts - небольшая библиотека для упрощения написания кода
+Разработчик: MainPlay TG
+https://t.me/MainPlay_InfoCh"""
+
+import traceback as _traceback
+def _print_exc(e):
+  _traceback.print_exc()
 # Данные о модуле
+__version_tuple__=(1,6,59)
 __version__="{}.{}.{}".format(*__version_tuple__)
 __depends__={
   "required":[
@@ -21,6 +28,7 @@ __functions__=[
   "clear",
   "cls",
   "dict.path",
+  "dict.swap",
   "dir.copy",
   "dir.create",
   "dir.delete",
@@ -136,55 +144,62 @@ __all__.sort()
 try:
   from MainShortcuts.cfg import cfg
 except Exception as error:
-  print(error)
+  _print_exc(error)
 try:
   from MainShortcuts.fileobj import fileobj
 except Exception as error:
-  print(error)
+  _print_exc(error)
 try:
   from MainShortcuts.matrix import matrix
 except Exception as error:
-  print(error)
+  _print_exc(error)
 try:
   import MainShortcuts.dict as dict
 except Exception as error:
-  print(error)
+  _print_exc(error)
 try:
   import MainShortcuts.dir as dir
 except Exception as error:
-  print(error)
+  _print_exc(error)
 try:
   import MainShortcuts.file as file
 except Exception as error:
-  print(error)
+  _print_exc(error)
 try:
   import MainShortcuts.json as json
 except Exception as error:
-  print(error)
+  _print_exc(error)
 try:
   import MainShortcuts.main as main
   exit=main.exit
   clear=main.clear
   cls=main.cls
+  cd=main.cd
+  pwd=main.pwd
 except Exception as error:
-  print(error)
+  _print_exc(error)
 try:
   import MainShortcuts.os as os
 except Exception as error:
-  print(error)
+  _print_exc(error)
 try:
   import MainShortcuts.path as path
 except Exception as error:
-  print(error)
+  _print_exc(error)
 try:
   import MainShortcuts.proc as proc
 except Exception as error:
-  print(error)
+  _print_exc(error)
 try:
   import MainShortcuts.str as str
 except Exception as error:
-  print(error)
+  _print_exc(error)
 try:
   import MainShortcuts.list as list
 except Exception as error:
-  print(error)
+  _print_exc(error)
+if os.platform=="Windows":
+  try:
+    import MainShortcuts.reg as reg
+  except Exception as error:
+    _print_exc(error)
