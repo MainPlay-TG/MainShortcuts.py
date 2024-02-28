@@ -59,7 +59,7 @@ def _dict_update(a,b):
 class cfg:
   # Код
   def __init__(self,path,
-    data=None,
+    data={},
     default={},
     type="auto", # "auto" - определение по расширению файла
     json_args={},
@@ -189,6 +189,11 @@ class cfg:
     if data==None:
       data=self.data
     self.data=_dict_update(self.default,data)
+    return self.data
+  def dload(self,data=None,*args,**kwargs):
+    if m_path.exists(self.path):
+      self.load(*args,**kwargs)
+    self.set_default(data=data)
     return self.data
   read=load
   open=load

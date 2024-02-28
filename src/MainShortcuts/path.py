@@ -7,8 +7,7 @@ pathsep=sep
 separator=sep
 pwd=_os.getcwd
 cd=_os.chdir
-def exists(path): # Объект существует?
-  return _os.path.exists(path)
+exists=_os.path.exists
 def merge(array,sep=pathsep): # Собрать путь к объекту из массива
   return sep.join(array)
 def split(path,sep=pathsep): # Разложить путь к объекту на массив
@@ -32,6 +31,9 @@ def info(path=_os.getcwd(),listdir=False,listlinks=False): # Информаци�
     "split":[], # Путь, разделённый на массив
     "type":None, # Тип объекта | "file"/"dir"
     "errors":{}, # Параметры, при получении которых возникла ошибка
+    "created":None, # Timestamp создания файла
+    "modified":None, # Timestamp последнего изменения файла
+    "used":None, # Timestamp последнего использования файла
     }
   errors={}
   i["path"]=path
@@ -56,6 +58,9 @@ def info(path=_os.getcwd(),listdir=False,listlinks=False): # Информаци�
   except Exception as e:
     errors["exists"]=e
   if i["exists"]:
+    i["created"]=_os.path.getctime(path)
+    i["modified"]=_os.path.getmtime(path)
+    i["used"]=_os.path.getatime(path)
     i["link"]=_os.path.islink(path)
     if i["link"]:
       try:
@@ -114,26 +119,24 @@ class recurse_info:
     except:
       return False
 def delete(path): # Удалить
-  inf=info(path)
-  if inf["exists"]:
+  if _os.path.exists(path):
     if _os.path.islink(path):
       _os.unlink(path)
-    if inf["type"]=="file":
+    elif _os.path.isfile(path):
       _os.remove(path)
-    elif inf["type"]=="dir":
+    elif _os.path.isdir(path):
       _shutil.rmtree(path)
     else:
-      raise Exception("Unknown type: "+inf["type"])
+      raise Exception("Unknown type")
 rm=delete
 # del=delete
 def copy(fr,to): # Копировать
-  type=info(fr)["type"]
-  if type=="file":
+  if _os.path.isfile(fr):
     _shutil.copy(fr,to)
-  elif type=="dir":
+  elif _os.path.isdir(fr):
     _shutil.copytree(fr,to)
   else:
-    raise Exception("Unknown type: "+type)
+    raise Exception("Unknown type")
 cp=copy
 def move(fr,to): # Переместить
   _shutil.move(fr,to)

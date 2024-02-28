@@ -17,6 +17,8 @@ elif m_os.platform=="Linux": # Linux
     _os.system("clear")
   cls=clear
 elif m_os.platform=="Darwin": # MacOS
-  pass
+  def clear():
+    raise Exception("This feature is not available on the current operating system")
+  cls=clear
 else: # Неизвестный тип
-  print("MainShortcuts WARN: Unknown OS \""+m_os.platform+"\"")
+  print("MainShortcuts WARN: Unknown OS \""+m_os.platform+"\"",file=_sys.stderr)

@@ -69,7 +69,7 @@ def getCoreMini(path=argv):
     p=list(path)
   else:
     p=path
-  d='from MainShortcuts.MainCore import ms, _MainCore, dictplus\nmcore=_MainCore(__name__=__name__,__file__=__file__)\ncprint=mcore.cprint\ncformat=mcore.cformat\nglobals=dictplus()\ncfg=ms.cfg(mcore.dir+"/cfg.json")\ntry:\n  cfg.load()\nexcept FileNotFoundError:\n  cfg.data={}\ncfg.default={}\ncfg.set_default()\n'
+  d='from MainShortcuts.MainCore import ms, _MainCore, dictplus\nmcore=_MainCore(__name__=__name__,__file__=__file__)\ncprint=mcore.cprint\ncformat=mcore.cformat\nglobals=dictplus()\ncfg=ms.cfg(mcore.dir+"/cfg.json")\ncfg.default={}\ncfg.dload()\n'
   for i in p:
     try:
       if ms.path.exists(i):

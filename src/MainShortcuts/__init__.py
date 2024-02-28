@@ -6,7 +6,7 @@ import traceback as _traceback
 def _print_exc(e):
   _traceback.print_exc()
 # Данные о модуле
-__version_tuple__=(1,6,59)
+__version_tuple__=(1,6,62)
 __version__="{}.{}.{}".format(*__version_tuple__)
 __depends__={
   "required":[
@@ -22,6 +22,7 @@ __depends__={
     "hashlib",
     "pickle",
     "toml",
+    "colorama",
     ]
   }
 __functions__=[

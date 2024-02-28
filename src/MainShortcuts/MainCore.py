@@ -44,6 +44,13 @@ class _MainCore:
     self.core_name="MainCore"
     self.core_version=4
     self.dir=os.path.dirname(__file__) # Папка, в которой находится программа
+    self.execdir=self.dir
+    try:
+      tmp=os.path.split(self.dir)
+      if tmp[1]=="_internal":
+        self.execdir=tmp[0]
+    except:
+      pass
     self.exception=traceback.format_exc
     self.pid=os.getpid() # PID программы
     self.run=__name__=="__main__" # Запущена программа или её импортируют?
