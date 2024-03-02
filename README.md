@@ -11,11 +11,13 @@ pip install -U mainshortcuts
 ```python
 import MainShortcuts as ms
 ```
+Или же создайте/добавьте импорт MainCore в вашу программу
+```bash
+MS-getCoreMini program.py
+```
 Встроенная информация о модуле
 ```python
 ms.__version__ -> str # Версия модуля
-ms.__functions__ -> list # Функции, которые существуют в модуле
-ms.__variables__ -> list # Переменные, которые существуют в модуле
 ms.__depends__ -> dict # Обязательные и необязательные зависимости
 ```
 ### Выход с кодом ошибки

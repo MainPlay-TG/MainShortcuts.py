@@ -1,13 +1,33 @@
-"""MainShortcuts - небольшая библиотека для упрощения написания кода
-Разработчик: MainPlay TG
+"""MainShortcuts - \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u0430\u044F \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u0434\u043B\u044F \u0443\u043F\u0440\u043E\u0449\u0435\u043D\u0438\u044F \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u044F \u043A\u043E\u0434\u0430
+\u0420\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0447\u0438\u043A: MainPlay TG
 https://t.me/MainPlay_InfoCh"""
 
-import traceback as _traceback
-def _print_exc(e):
-  _traceback.print_exc()
-# Данные о модуле
-__version_tuple__=(1,6,62)
-__version__="{}.{}.{}".format(*__version_tuple__)
+__version_tuple__=(1,6,65)
+__import_data__={
+  "import MainShortcuts.{name} as {name}":[
+    "dict",
+    "dir",
+    "file",
+    "json",
+    "list",
+    "os",
+    "path",
+    "proc",
+    "str",
+    ],
+  "from MainShortcuts.{name} import {name}":[
+    "cfg",
+    "dictplus",
+    "fileobj",
+    ],
+  "{name}=main.{name}":[
+    "cd",
+    "clear",
+    "cls",
+    "exit",
+    "pwd",
+    ]
+  }
 __depends__={
   "required":[
     "json",
@@ -18,72 +38,14 @@ __depends__={
     "sys",
     ],
   "optional":[
+    "colorama",
     "cPickle",
     "hashlib",
     "pickle",
+    "PIL",
     "toml",
-    "colorama",
     ]
   }
-__functions__=[
-  "clear",
-  "cls",
-  "dict.path",
-  "dict.swap",
-  "dir.copy",
-  "dir.create",
-  "dir.delete",
-  "dir.list",
-  "dir.move",
-  "dir.rename",
-  "exit",
-  "file.copy",
-  "file.delete",
-  "file.move",
-  "file.open",
-  "file.read",
-  "file.rename",
-  "file.save",
-  "file.write",
-  "json.decode",
-  "json.encode",
-  "json.print",
-  "json.read",
-  "json.rebuild",
-  "json.rewrite",
-  "json.sort",
-  "json.write",
-  "list.filter",
-  "list.rm_duplicates",
-  "path.copy",
-  "path.cp",
-  "path.delete",
-  "path.exists",
-  "path.format",
-  "path.info",
-  "path.link",
-  "path.ln",
-  "path.merge",
-  "path.move",
-  "path.mv",
-  "path.rename",
-  "path.rm",
-  "path.rn",
-  "path.split",
-  "proc.run",
-  "str.array2str",
-  "str.dict2str",
-  "str.replace.all",
-  "str.replace.multi",
-  ]
-__variables__=[
-  "os.platform",
-  "os.type",
-  "path.sep",
-  "path.separator",
-  "proc.args",
-  "proc.pid",
-  ]
 __scripts__=[
   "MS-getCore",
   "MS-getCoreMini",
@@ -91,116 +53,16 @@ __scripts__=[
   "MS-jsonP",
   "MS-mkdir",
   ]
-__classes__={
-  "cfg":{
-    "functions":[
-      "load",
-      "open",
-      "read",
-      "save",
-      "write"
-      ],
-    "variables":[
-      "byte_args",
-      "cPickle_args",
-      "data",
-      "default",
-      "json_args",
-      "path",
-      "pickle_args",
-      "text_args",
-      "toml_args",
-      "type"
-      ]
-    },
-  "fileobj":{
-    "functions":[],
-    "variables":[]
-    },
-  "path.recurse_info":{
-    "functions":[],
-    "variables":[]
-    },
-  "matrix":{
-    "functions":[
-      "get",
-      "reload",
-      "slice",
-      ],
-    "variables":[
-      "sizeX",
-      "sizeY",
-      "mode",
-      "empty",
-      "data",
-      ]
-    },
-  }
-__all__=__functions__+__variables__+list(__classes__.keys())
-__functions__.sort()
-__scripts__.sort()
-__variables__.sort()
+__all__=[]
+__import_errors__={}
+import MainShortcuts.main as main
+for code,names in __import_data__.items():
+  for name in names:
+    try:
+      exec(code.format(name=name))
+      __all__.append(name)
+    except Exception as e:
+      __import_errors__[name]=e
 __all__.sort()
-# Импорт
-try:
-  from MainShortcuts.cfg import cfg
-except Exception as error:
-  _print_exc(error)
-try:
-  from MainShortcuts.fileobj import fileobj
-except Exception as error:
-  _print_exc(error)
-try:
-  from MainShortcuts.matrix import matrix
-except Exception as error:
-  _print_exc(error)
-try:
-  import MainShortcuts.dict as dict
-except Exception as error:
-  _print_exc(error)
-try:
-  import MainShortcuts.dir as dir
-except Exception as error:
-  _print_exc(error)
-try:
-  import MainShortcuts.file as file
-except Exception as error:
-  _print_exc(error)
-try:
-  import MainShortcuts.json as json
-except Exception as error:
-  _print_exc(error)
-try:
-  import MainShortcuts.main as main
-  exit=main.exit
-  clear=main.clear
-  cls=main.cls
-  cd=main.cd
-  pwd=main.pwd
-except Exception as error:
-  _print_exc(error)
-try:
-  import MainShortcuts.os as os
-except Exception as error:
-  _print_exc(error)
-try:
-  import MainShortcuts.path as path
-except Exception as error:
-  _print_exc(error)
-try:
-  import MainShortcuts.proc as proc
-except Exception as error:
-  _print_exc(error)
-try:
-  import MainShortcuts.str as str
-except Exception as error:
-  _print_exc(error)
-try:
-  import MainShortcuts.list as list
-except Exception as error:
-  _print_exc(error)
-if os.platform=="Windows":
-  try:
-    import MainShortcuts.reg as reg
-  except Exception as error:
-    _print_exc(error)
+__version__="{}.{}.{}".format(*__version_tuple__)
+del code,names,name
