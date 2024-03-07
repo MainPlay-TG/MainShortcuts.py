@@ -48,37 +48,15 @@ def getCore(path=argv):
     p=list(path)
   else:
     p=path
-  from MainShortcuts.MainCore import __file__ as corePath
   for i in p:
     try:
       if ms.path.exists(i):
         a=ms.file.read(i)
-        b=ms.file.read(corePath).strip()
-        c=b.rstrip()+"\n"+a
+        c=mcore.embed.text+a
         ms.file.write(i,c.rstrip())
         cprint(f'MainCore added to the beginning of the file "{i}"',start="GREEN")
       else:
-        ms.file.copy(corePath,i)
-        cprint(f'MainCore is written to file "{i}"',start="GREEN")
-    except Exception as e:
-      cprint(e,start="RED")
-def getCoreMini(path=argv):
-  if type(path)==str:
-    p=[path]
-  elif type(path)==tuple:
-    p=list(path)
-  else:
-    p=path
-  d='from MainShortcuts.MainCore import ms, _MainCore, dictplus\nmcore=_MainCore(__name__=__name__,__file__=__file__)\ncprint=mcore.cprint\ncformat=mcore.cformat\nglobals=dictplus()\ncfg=ms.cfg(mcore.dir+"/cfg.json")\ncfg.default={}\ncfg.dload()\n'
-  for i in p:
-    try:
-      if ms.path.exists(i):
-        a=ms.file.read(i)
-        c=d+a
-        ms.file.write(i,c.rstrip())
-        cprint(f'MainCore added to the beginning of the file "{i}"',start="GREEN")
-      else:
-        ms.file.write(i,d)
+        ms.file.write(i,mcore.embed.text)
         cprint(f'MainCore is written to file "{i}"',start="GREEN")
     except Exception as e:
       cprint(e,start="RED")

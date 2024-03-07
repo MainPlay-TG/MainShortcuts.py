@@ -2,7 +2,7 @@
 \u0420\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0447\u0438\u043A: MainPlay TG
 https://t.me/MainPlay_InfoCh"""
 
-__version_tuple__=(1,6,65)
+__version_tuple__=(1,6,66)
 __import_data__={
   "import MainShortcuts.{name} as {name}":[
     "dict",
@@ -42,7 +42,6 @@ __depends__={
     "cPickle",
     "hashlib",
     "pickle",
-    "PIL",
     "toml",
     ]
   }

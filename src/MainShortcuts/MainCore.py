@@ -5,19 +5,63 @@ class _MainCore:
   def __init__(self,color=True,__name__=__name__,__file__=__file__):
     self.args=ms.proc.args # Все аргументы запуска (то же самое, что и sys.argv)
     self.core_name="MainCore"
-    self.core_version=4
+    self.core_version=5
     self.dir=os.path.dirname(__file__) # Папка, в которой находится программа
-    self.execdir=self.dir
+    self.execdir=self.dir # Если программа собрана через "pyinstaller --onedir", указывает папку с исполняемым файлом
     try:
       tmp=os.path.split(self.dir)
       if tmp[1]=="_internal":
         self.execdir=tmp[0]
     except:
       pass
-    self.exception=traceback.format_exc
+    self.exception=traceback.format_exc # Получить traceback в виде текста
     self.pid=os.getpid() # PID программы
     self.run=__name__=="__main__" # Запущена программа или её импортируют?
-    self.color_names=["","BG_BLACK","BG_BLUE","BG_GREEN","BG_LIGHTBLACK","BG_LIGHTBLUE","BG_LIGHTGREEN","BG_LIGHTPINK","BG_LIGHTRED","BG_LIGHTWHITE","BG_LIGHTYELLOW","BG_PINK","BG_RED","BG_WHITE","BG_YELLOW","BLACK","BLUE","GREEN","HIGH","LIGHTBLACK","LIGHTBLUE","LIGHTGREEN","LIGHTPINK","LIGHTRED","LIGHTWHITE","LIGHTYELLOW","LOW","PINK","RED","RESET","WHITE","YELLOW"]
+    self.embed=dictplus()
+    self.embed.lines=[
+      "from MainShortcuts.MainCore import os, ms, _MainCore, dictplus",
+      "mcore=_MainCore(__name__=__name__,__file__=__file__) # Инициализация MainCore",
+      "cprint, cformat=mcore.cprint, mcore.cformat # Утилиты для вывода цветного текста в консоль",
+      "globals=dictplus() # Глобальные переменные",
+      'cfg=ms.cfg(mcore.execdir+"/cfg.json") # Файл настроек программы',
+      "cfg.default={} # Установка настроек по умолчанию (только если словарь)",
+      "cfg.dload() # Загрузка настроек и заполнение отсутствующих",
+      ]
+    self.embed.text="\n".join(self.embed.lines)+"\n" # Текст для встраивания MainCore в программу
+    self.color_names=[
+      "",
+      "BG_BLACK",
+      "BG_BLUE",
+      "BG_GREEN",
+      "BG_LIGHTBLACK",
+      "BG_LIGHTBLUE",
+      "BG_LIGHTGREEN",
+      "BG_LIGHTPINK",
+      "BG_LIGHTRED",
+      "BG_LIGHTWHITE",
+      "BG_LIGHTYELLOW",
+      "BG_PINK",
+      "BG_RED",
+      "BG_WHITE",
+      "BG_YELLOW",
+      "BLACK",
+      "BLUE",
+      "GREEN",
+      "HIGH",
+      "LIGHTBLACK",
+      "LIGHTBLUE",
+      "LIGHTGREEN",
+      "LIGHTPINK",
+      "LIGHTRED",
+      "LIGHTWHITE",
+      "LIGHTYELLOW",
+      "LOW",
+      "PINK",
+      "RED",
+      "RESET",
+      "WHITE",
+      "YELLOW",
+      ]
     self.colors={}
     for i in self.color_names:
       self.colors[i]=""
@@ -93,7 +137,3 @@ class _MainCore:
       return target(*args,**kwargs)
     except:
       return self.exception()
-mcore=_MainCore()
-cprint=mcore.cprint
-cformat=mcore.cformat
-globals=dictplus()
