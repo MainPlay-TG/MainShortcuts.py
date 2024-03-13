@@ -4,16 +4,18 @@ import sys as _sys
 args=_sys.argv # Аргументы запуска программы
 pid=_os.getpid() # PID текущего процесса
 var=_os.environ # Переменные всего процесса
+sp_kwargs={
+  "text":True,
+  "stdin":_subprocess.PIPE,
+  "stdout":_subprocess.PIPE,
+  "stderr":_subprocess.PIPE,
+  }
 def run(a,*args,**kwargs): # Запустить процесс ("nano example.txt" -> ["nano","example.txt"])
-  p=_subprocess.Popen(a,*args,stdout=_subprocess.PIPE,stderr=_subprocess.PIPE,**kwargs)
+  kw=sp_kwargs
+  kw.update(kwargs)
+  p=_subprocess.Popen(a,*args,**kw)
   code=p.wait()
   out,err=p.communicate()
-  if type(out)==bytes:
-    out=out.decode("utf-8")
-  out=str(out)
-  if type(err)==bytes:
-    err=err.decode("utf-8")
-  err=str(err)
   r={
     "code":code,
     "output":out,
