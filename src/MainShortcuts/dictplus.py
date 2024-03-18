@@ -1,9 +1,14 @@
 class dictplus:
+  """Улучшенный словарь
+  Можно получить элементы и через dictplus["key"], и через dictplus.key
+  Вариант использования через аттрибуты может работать не на все ключи"""
   def __init__(self,data=None):
+    """Без аргументов создаётся {}
+    Аргументом можно указать любой словарь"""
     if data==None:
       self.__data__={}
     else:
-      self.__data__=data
+      self.__data__=data.copy()
   def __getattr__(self,k):
     if k=="__data__":
       return self.__dict__[k]

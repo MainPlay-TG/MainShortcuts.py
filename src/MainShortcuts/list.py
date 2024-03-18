@@ -1,5 +1,9 @@
 import re
 def filter(a,whitelist=None,blacklist=[],regex=False,begin=None,end=None):
+  """Фильтровать список
+  whitelist - удалить всё, чего нет в этом списке
+  blacklist - удалить всё, что есть в этом списке
+  regex - сортировка с регулярным выражением (строки)"""
   if whitelist==None:
     whitelist=a
   if type(whitelist)==str:
@@ -42,7 +46,13 @@ def filter(a,whitelist=None,blacklist=[],regex=False,begin=None,end=None):
     if add:
       b.append(i)
   return b
-def rm_duplicates(a,trim=False,case=False):
+def rm_duplicates(a,trim=False,case=False,func=lambda i:i):
+  """Удалить дублирующиеся элементы
+  trim - True: использовать strip()
+         l: использовать lstrip()
+         r: использовать rstrip()
+  case - lower/upper/capitalize
+  func - обработать каждый элемент этой функцией"""
   b=[]
   trim=str(trim).lower()
   case=str(case).lower()
@@ -59,6 +69,7 @@ def rm_duplicates(a,trim=False,case=False):
       i=i.upper()
     elif case in ["capitalize","cap"]:
       i=i.capitalize()
+    i=func(i)
     if not i in b:
       b.append(i)
   return b

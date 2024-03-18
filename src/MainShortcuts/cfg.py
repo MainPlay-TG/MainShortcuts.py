@@ -57,7 +57,8 @@ def _dict_update(a,b):
     a[k]=v
   return a
 class cfg:
-  # Код
+  """Загрузка и сохранение данных в файл
+  Рекомендуется использовать словарь"""
   def __init__(self,path,
     data={},
     default={},
@@ -69,7 +70,12 @@ class cfg:
     text_args={},
     byte_args={}
     ):
-    # Код
+    """Аргументы:
+    path - путь к файлу, в котором нужно хранить данные
+    data - заранее указанные данные
+    default - значения по умолчанию
+    type - тип хранения (по умолчанию от расширения файла)
+    {type}_args - агрументы для сохранения"""
     self.json_args={
       "mode":"c",
       "indent":2,
@@ -108,7 +114,8 @@ class cfg:
   def __setitem__(self,k,v):
     self.data[k]=v
   def load(self,path=None,type=None,json_args={},pickle_args={},toml_args={},text_args={}):
-    # Загрузка из файла
+    """Загрузить данные из файла
+    Можно переопределить некоторые аргументы из __init__"""
     if path==None:
       path=self.path
     if type==None:
@@ -148,7 +155,8 @@ class cfg:
       self.data=_dict_update(self.default,self.data)
     return self.data
   def save(self,path=None,type=None,json_args={},pickle_args={},cPickle_args={},toml_args={},text_args={}):
-    # Сохранение в файл
+    """Сохранить данные в файл
+    Можно переопределить некоторые аргументы из __init__"""
     if path==None:
       path=self.path
     if type==None:
@@ -186,11 +194,16 @@ class cfg:
     elif type=="byte":
       file.save(path,self.data)
   def set_default(self,data=None):
+    """Поставить значение по умолчанию, если оно отсутствует в данных
+    Работает только для словарей"""
     if data==None:
       data=self.data
     self.data=_dict_update(self.default,data)
     return self.data
   def dload(self,data=None,*args,**kwargs):
+    """Загрузить данные из файла и заполнить отсутствующие
+    Если файла нет, устанавливаются данные по умолчанию
+    Берёт те же аргументы, что и метод load"""
     if m_path.exists(self.path):
       self.load(*args,**kwargs)
     self.set_default(data=data)

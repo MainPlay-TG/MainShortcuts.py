@@ -5,6 +5,8 @@ try:
 except Exception as e:
   hl_err=e
 class hash:
+  """Получить контрольные суммы и размер файла
+  Может зависнуть при больших файлах"""
   def __init__(self,path):
     if hl_err!=False:
       raise hl_err
@@ -31,27 +33,30 @@ class hash:
   def __setitem__(self,k,v):
     setattr(self,k,v)
 class fileobj:
+  """Улучшенная работа с файлом
+  Переменные класса:
+    .content / .data / .bytes - байты файла (получить/записать)
+    .text / .str - текст файла (получить/записать)
+    .lines - текстовые линии файла (получить/записать)
+    .size - размер файла в байтах. Если force=True и файл отсутствует, возвращает 0
+    .exists - существует ли файл?"""
   def __init__(self,p,encoding="utf-8",force=False,short_names=True):
+    """
+    p - путь к файлу
+    encoding - кодировка (при работе с текстом)
+    force - принудительно выполнять"""
     if os.path.isdir(p) and not force:
       raise IsADirectoryError("Can't work with folder")
     self.encoding=encoding
     self.force=force
     self.path=p
-    self.short_names=short_names
-    if short_names:
-      self.cp=self.copy
-      self.hash=self.checksum
-      self.ln=self.link
-      self.load=self.open
-      self.mv=self.move
-      self.rm=self.delete
   def __getattr__(self,k):
     if k in ["content","data","bytes"]:
       return self.open()
     elif k in ["text","str"]:
       return self.read()
     elif k=="lines":
-      return self.read().rstrip().split("\n")
+      return self.read().split("\n")
     elif k=="size":
       if self.force and not os.path.exists(self.path):
         return 0
@@ -74,7 +79,7 @@ class fileobj:
       "read",
       "save",
       "size",
-      "write"
+      "write",
       ]
     if k in ["content","data","bytes"]:
       self.save(v)
@@ -104,17 +109,14 @@ class fileobj:
       "save",
       "write",
       ]
-    if self.short_names:
-      f2=[
-        "cp",
-        "hash",
-        "ln",
-        "load",
-        "mv",
-        "rm",
-        ]
-    else:
-      f2=[]
+    f2=[
+      "cp",
+      "hash",
+      "ln",
+      "load",
+      "mv",
+      "rm",
+      ]
     v=[
       "bytes",
       "content",
@@ -132,6 +134,7 @@ class fileobj:
   def __repr__(self):
     return f"ms.fileobj('{self.path}',encoding='{self.encoding}',force={self.force})"
   def open(self):
+    """Получить байты из файла"""
     if self.force:
       try:
         with open(self.path,"rb") as f:
@@ -143,6 +146,7 @@ class fileobj:
         a=f.read()
     return a
   def save(self,v):
+    """Записать байты в файл"""
     if self.force:
       if os.path.isdir(self.path):
         shutil.rmtree(self.path)
@@ -152,10 +156,13 @@ class fileobj:
       a=f.write(v)
     return a
   def read(self):
+    """Получить текст из файла"""
     return self.open().decode(self.encoding)
   def write(self,v):
+    """Записать текст в файл"""
     return self.save(v.encode(self.encoding))
   def delete(self):
+    """Удалить файл"""
     if os.path.islink(self.path):
       os.unlink(self.path)
     elif os.path.isfile(self.path):
@@ -163,6 +170,8 @@ class fileobj:
     elif os.path.isdir(self.path):
       shutil.rmtree(self.path)
   def move(self,dest,follow=True):
+    """Переместить файл
+    follow - следовать за файлом"""
     if os.path.exists(dest) and self.force:
       if os.path.islink(dest):
         os.unlink(dest)
@@ -174,6 +183,8 @@ class fileobj:
     if follow:
       self.path=dest
   def copy(self,dest,follow=False):
+    """Копировать файл
+    follow - следовать за файлом"""
     if os.path.exists(dest) and self.force:
       if os.path.islink(dest):
         os.unlink(dest)
@@ -185,6 +196,7 @@ class fileobj:
     if follow:
       self.path=dest
   def link(self,dest):
+    """Сделать символическую ссылку на файл"""
     if os.path.exists(dest) and self.force:
       if os.path.islink(dest):
         os.unlink(dest)
@@ -194,4 +206,11 @@ class fileobj:
         shutil.rmtree(dest)
     os.symlink(self.path,dest)
   def checksum(self):
+    """Получить контрольные суммы и размер файла"""
     return hash(self.path)
+  cp=copy
+  hash=checksum
+  ln=link
+  load=open
+  mv=move
+  rm=delete

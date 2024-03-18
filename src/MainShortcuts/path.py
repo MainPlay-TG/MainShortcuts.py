@@ -8,11 +8,17 @@ separator=sep
 pwd=_os.getcwd
 cd=_os.chdir
 exists=_os.path.exists
-def merge(array,sep=pathsep): # Собрать путь к объекту из массива
+def merge(array,sep=pathsep):
+  """Собрать путь к объекту из массива"""
   return sep.join(array)
-def split(path,sep=pathsep): # Разложить путь к объекту на массив
+def split(path,sep=pathsep):
+  """Разложить путь к объекту на массив"""
   return path.split(sep)
-def info(path=_os.getcwd(),listdir=False,listlinks=False): # Информация о пути
+def info(path=_os.getcwd(),listdir=False,listlinks=False):
+  """Информация о файле/папке
+  path - путь к объекту
+  listdir - если папка, то рекурсивно создать список содержимого и суммарный размер
+  listlinks - проверять ссылки при рекурсии?"""
   path=path.replace("\\","/")
   i={
     "dir":None, # Папка, в которой находится объект
@@ -82,6 +88,8 @@ def info(path=_os.getcwd(),listdir=False,listlinks=False): # Информаци�
   i["errors"]=errors
   return i
 class recurse_info:
+  """Рекурсивная информация о папке
+  В разработке"""
   def __init__(self,p=_os.getcwd(),links=False):
     self.path=p
     for k,v in info(p,listdir=True,listlinks=links).items():
@@ -118,7 +126,8 @@ class recurse_info:
       return myD==otD
     except:
       return False
-def delete(path): # Удалить
+def delete(path):
+  """Удалить папку или файл, если существует"""
   if _os.path.exists(path):
     if _os.path.islink(path):
       _os.unlink(path)
@@ -130,7 +139,8 @@ def delete(path): # Удалить
       raise Exception("Unknown type")
 rm=delete
 # del=delete
-def copy(fr,to): # Копировать
+def copy(fr,to):
+  """Копировать"""
   if _os.path.isfile(fr):
     _shutil.copy(fr,to)
   elif _os.path.isdir(fr):
@@ -138,21 +148,26 @@ def copy(fr,to): # Копировать
   else:
     raise Exception("Unknown type")
 cp=copy
-def move(fr,to): # Переместить
+def move(fr,to):
+  """Переместить"""
   _shutil.move(fr,to)
 mv=move
-def rename(fr,to): # Переименовать
+def rename(fr,to):
+  """Переименовать"""
   _os.rename(fr,to)
 rn=rename
-def link(fr,to,force=False): # Сделать символическую ссылку
+def link(fr,to,force=False):
+  """Сделать символическую ссылку"""
   if exists(to) and force:
     delete(to)
   _os.symlink(fr,to)
 ln=link
-def format(path,replace_to="_",replace_errors=True,sep=pathsep): # Форматировать путь к файлу (изменить разделитель, удалить недопустимые символы)
+def format(path,replace_to=None,sep=pathsep):
+  """Форматировать путь к файлу (изменить разделитель, удалить недопустимые символы)
+  replace_to - заменить недопустимые символы на указанный"""
   for i in ["/","\\"]:
     path=path.replace(i,sep)
-  if replace_errors:
+  if replace_to!=None:
     for i in ["\n",":","*","?","\"","<",">","|","+","%","!","@"]:
       path=path.replace(i,replace_to)
   return path

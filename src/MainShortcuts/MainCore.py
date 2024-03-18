@@ -1,9 +1,15 @@
-import os, traceback
+import os,sys,traceback
 import MainShortcuts as ms
-dictplus=ms.dictplus
+from MainShortcuts.dictplus import dictplus
 class _MainCore:
-  def __init__(self,color=True,__name__=__name__,__file__=__file__):
-    self.args=ms.proc.args # Все аргументы запуска (то же самое, что и sys.argv)
+  """Переменные:
+  .args - то же самое, что и sys.argv
+  .dir - папка с текущей программой (использует __file__)
+  .execdir - если программа находится в папке "_internal", указана родительская папка
+  .embed - тексты для всраивания MainCore в программу
+  .run - запущена ли программа или её импортируют? (использует __name__)"""
+  def __init__(self,color=True,*,__name__,__file__):
+    self.args=sys.argv
     self.core_name="MainCore"
     self.core_version=5
     self.dir=os.path.dirname(__file__) # Папка, в которой находится программа

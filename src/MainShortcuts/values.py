@@ -1,3 +1,4 @@
+"""Модифицированные версии встроенных значений"""
 import builtins,json
 class int:
   def __init__(self,data=0):

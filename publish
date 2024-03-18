@@ -1,3 +1,4 @@
+py src/dev/make-import.py
 nano src/MainShortcuts/__init__.py
 nano pyproject.toml
 poetry publish --build

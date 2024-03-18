@@ -10,7 +10,8 @@ sp_kwargs={
   "stdout":_subprocess.PIPE,
   "stderr":_subprocess.PIPE,
   }
-def run(a,*args,**kwargs): # Запустить процесс ("nano example.txt" -> ["nano","example.txt"])
+def run(a,*args,**kwargs):
+  """Запустить процесс (упрощённый subprocess.Popen)"""
   kw=sp_kwargs
   kw.update(kwargs)
   p=_subprocess.Popen(a,*args,**kw)

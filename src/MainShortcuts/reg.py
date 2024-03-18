@@ -1,3 +1,5 @@
+"""Работа с реестром Windows"""
+pass
 """import winreg as _winreg
 class open:
   def __init__(self,path):
