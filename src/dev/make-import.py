@@ -19,6 +19,8 @@ import_data={
     ],
   "{name}=main.{name}":[
     "cd",
+    "clear_ANSI",
+    "cls_ANSI",
     "clear",
     "cls",
     "exit",
@@ -26,7 +28,8 @@ import_data={
     ]
   }
 lines=[
-  '"""Этот файл просто импортирует части модуля"""',
+  '"""Этот файл просто импортирует части модуля',
+  'Он создаётся автоматически"""',
   "import MainShortcuts.main as main",
   "imports_all=[]",
   "imports_import_errors={}",

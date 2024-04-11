@@ -5,6 +5,9 @@ import sys as _sys
 exit=_sys.exit
 cd=_os.chdir
 pwd=_os.getcwd
+def clear_ANSI():
+  print("\u001b[2J")
+cls_ANSI=clear_ANSI
 # Команды для разных ОС
 if m_os.platform=="Windows": # Windows
   def clear():

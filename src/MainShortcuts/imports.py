@@ -1,4 +1,5 @@
-"""Этот файл просто импортирует части модуля"""
+"""Этот файл просто импортирует части модуля
+Он создаётся автоматически"""
 import MainShortcuts.main as main
 imports_all=[]
 imports_import_errors={}
@@ -67,6 +68,16 @@ try:
   imports_all.append('cd')
 except Exception as e:
   imports_import_errors['cd']=e
+try:
+  clear_ANSI=main.clear_ANSI
+  imports_all.append('clear_ANSI')
+except Exception as e:
+  imports_import_errors['clear_ANSI']=e
+try:
+  cls_ANSI=main.cls_ANSI
+  imports_all.append('cls_ANSI')
+except Exception as e:
+  imports_import_errors['cls_ANSI']=e
 try:
   clear=main.clear
   imports_all.append('clear')

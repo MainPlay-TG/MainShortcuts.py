@@ -1,5 +1,5 @@
 from MainShortcuts.MainCore import ms, _MainCore
-mcore=_MainCore()
+mcore=_MainCore(__file__=__file__,__name__=__name__)
 cprint=mcore.cprint
 cformat=mcore.cformat
 argv=mcore.args[1:]
