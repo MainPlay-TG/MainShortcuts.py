@@ -3,14 +3,47 @@ import MainShortcuts.path as m_path
 import json as _json
 import sys as _sys
 _print=print
-def encode(data,mode="c",indent=2,sort=True,**kwargs):
+def _obj_encoder(obj,recurse=2,func=lambda k:not k.startswith("_")):
+  """Преобразование объекта в словарь
+  obj - сам объект
+  recurse - глубина рекурсивной обработки
+  func - фильтр атрибутов"""
+  if hasattr(obj,"to_dict"):
+    to_dict=getattr(obj,"to_dict")
+    if callable(to_dict):
+      return to_dict()
+  types=[
+    str,
+    dict,
+    tuple,
+    list,
+    int,
+    float,
+    type(True),
+    type(False),
+    type(None),
+    ]
+  d={}
+  for k in dir(obj):
+    if func(k):
+      v=getattr(obj,k)
+      if callable(v):continue
+      if type(v) in types:
+        d[k]=v
+      elif recurse>0:
+        d[k]=_obj_encoder(v,recurse=recurse-1)
+  return d
+def encode(data,mode="c",indent=2,sort=True,force=True,**kwargs):
   """Данные в текст JSON
   data - данные для кодирования
   mode - c/compress/min/zip: сжатый JSON
          p/pretty/max/print: развёрнутый JSON
   indent - кол-во отступов в развёрнутом JSON
   sort - сортировка словарей
+  force - преобразовывать объекты в словари
   остальные аргументы как в json.dumps"""
+  if force:
+    kwargs["default"]=_obj_encoder
   kwargs["sort_keys"]=sort
   if mode in ["c","compress","min","zip"]: # Сжатый
     kwargs["separators"]=[",",":"]
