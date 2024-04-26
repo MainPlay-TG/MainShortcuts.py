@@ -4,6 +4,56 @@ import MainShortcuts.main as main
 imports_all=[]
 imports_import_errors={}
 try:
+  cd=main.cd
+  imports_all.append('cd')
+except Exception as e:
+  imports_import_errors['cd']=e
+try:
+  clear_ANSI=main.clear_ANSI
+  imports_all.append('clear_ANSI')
+except Exception as e:
+  imports_import_errors['clear_ANSI']=e
+try:
+  cls_ANSI=main.cls_ANSI
+  imports_all.append('cls_ANSI')
+except Exception as e:
+  imports_import_errors['cls_ANSI']=e
+try:
+  clear=main.clear
+  imports_all.append('clear')
+except Exception as e:
+  imports_import_errors['clear']=e
+try:
+  cls=main.cls
+  imports_all.append('cls')
+except Exception as e:
+  imports_import_errors['cls']=e
+try:
+  exit=main.exit
+  imports_all.append('exit')
+except Exception as e:
+  imports_import_errors['exit']=e
+try:
+  pwd=main.pwd
+  imports_all.append('pwd')
+except Exception as e:
+  imports_import_errors['pwd']=e
+try:
+  from MainShortcuts.cfg import cfg
+  imports_all.append('cfg')
+except Exception as e:
+  imports_import_errors['cfg']=e
+try:
+  from MainShortcuts.dictplus import dictplus
+  imports_all.append('dictplus')
+except Exception as e:
+  imports_import_errors['dictplus']=e
+try:
+  from MainShortcuts.fileobj import fileobj
+  imports_all.append('fileobj')
+except Exception as e:
+  imports_import_errors['fileobj']=e
+try:
   import MainShortcuts.dict as dict
   imports_all.append('dict')
 except Exception as e:
@@ -49,53 +99,8 @@ try:
 except Exception as e:
   imports_import_errors['str']=e
 try:
-  from MainShortcuts.cfg import cfg
-  imports_all.append('cfg')
+  import MainShortcuts.win as win
+  imports_all.append('win')
 except Exception as e:
-  imports_import_errors['cfg']=e
-try:
-  from MainShortcuts.dictplus import dictplus
-  imports_all.append('dictplus')
-except Exception as e:
-  imports_import_errors['dictplus']=e
-try:
-  from MainShortcuts.fileobj import fileobj
-  imports_all.append('fileobj')
-except Exception as e:
-  imports_import_errors['fileobj']=e
-try:
-  cd=main.cd
-  imports_all.append('cd')
-except Exception as e:
-  imports_import_errors['cd']=e
-try:
-  clear_ANSI=main.clear_ANSI
-  imports_all.append('clear_ANSI')
-except Exception as e:
-  imports_import_errors['clear_ANSI']=e
-try:
-  cls_ANSI=main.cls_ANSI
-  imports_all.append('cls_ANSI')
-except Exception as e:
-  imports_import_errors['cls_ANSI']=e
-try:
-  clear=main.clear
-  imports_all.append('clear')
-except Exception as e:
-  imports_import_errors['clear']=e
-try:
-  cls=main.cls
-  imports_all.append('cls')
-except Exception as e:
-  imports_import_errors['cls']=e
-try:
-  exit=main.exit
-  imports_all.append('exit')
-except Exception as e:
-  imports_import_errors['exit']=e
-try:
-  pwd=main.pwd
-  imports_all.append('pwd')
-except Exception as e:
-  imports_import_errors['pwd']=e
+  imports_import_errors['win']=e
 imports_all.sort()

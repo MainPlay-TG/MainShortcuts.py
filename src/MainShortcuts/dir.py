@@ -74,21 +74,28 @@ def list(path,files=True,dirs=True,links=None):
   links - None: показывать всё
           True: показывать только ссылки
           False: не показывать ссылки"""
-  a=_os.listdir(path)
-  b=[]
-  for i in a:
-    info=m_path.info(i)
+  r=[]
+  for i in _os.listdir(path):
+    i=f"{path}/{i}"
     if links==None:
-      c=True
+      pass
     elif links==True:
-      c=info["link"]
+      if not _os.path.islink(i):
+        continue
     elif links==False:
-      c=not info["link"]
+      if _os.path.islink(i):
+        continue
     else:
       raise Exception('"links" can only be True, False or None')
-    if c:
-      if files and info["type"]=="file":
-        b.append(i)
-      elif dirs and info["type"]=="dir":
-        b.append(i)
-  return b
+    if files and dirs:
+      r.append(i)
+      continue
+    if files:
+      if _os.path.isfile(i):
+        r.append(i)
+        continue
+    if dirs:
+      if _os.path.isdir(i):
+        r.append(i)
+        continue
+  return r

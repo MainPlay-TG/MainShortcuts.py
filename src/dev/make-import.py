@@ -1,7 +1,21 @@
 import os
 os.chdir(os.path.dirname(os.path.dirname(__file__))+"/MainShortcuts")
 import_data={
-  "import MainShortcuts.{name} as {name}":[
+  "{name}=main.{name}": [
+    "cd",
+    "clear_ANSI",
+    "cls_ANSI",
+    "clear",
+    "cls",
+    "exit",
+    "pwd"
+  ],
+  "from MainShortcuts.{name} import {name}": [
+    "cfg",
+    "dictplus",
+    "fileobj"
+  ],
+  "import MainShortcuts.{name} as {name}": [
     "dict",
     "dir",
     "file",
@@ -11,22 +25,9 @@ import_data={
     "path",
     "proc",
     "str",
-    ],
-  "from MainShortcuts.{name} import {name}":[
-    "cfg",
-    "dictplus",
-    "fileobj",
-    ],
-  "{name}=main.{name}":[
-    "cd",
-    "clear_ANSI",
-    "cls_ANSI",
-    "clear",
-    "cls",
-    "exit",
-    "pwd",
-    ]
-  }
+    "win"
+  ]
+}
 lines=[
   '"""Этот файл просто импортирует части модуля',
   'Он создаётся автоматически"""',
