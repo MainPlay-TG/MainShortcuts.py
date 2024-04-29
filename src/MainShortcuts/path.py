@@ -8,13 +8,13 @@ separator=sep
 pwd=_os.getcwd
 cd=_os.chdir
 exists=_os.path.exists
-def merge(array,sep=pathsep):
+def merge(array:list,sep:str=pathsep):
   """Собрать путь к объекту из массива"""
   return sep.join(array)
-def split(path,sep=pathsep):
+def split(path:str):
   """Разложить путь к объекту на массив"""
-  return path.split(sep)
-def info(path=_os.getcwd(),listdir=False,listlinks=False):
+  return path.replace("\\","/").split("/")
+def info(path:str=_os.getcwd(),listdir:bool=False,listlinks:bool=False)->dict:
   """Информация о файле/папке
   path - путь к объекту
   listdir - если папка, то рекурсивно создать список содержимого и суммарный размер
@@ -90,7 +90,7 @@ def info(path=_os.getcwd(),listdir=False,listlinks=False):
 class recurse_info:
   """Рекурсивная информация о папке
   В разработке"""
-  def __init__(self,p=_os.getcwd(),links=False):
+  def __init__(self,p:str=_os.getcwd(),links:bool=False):
     self.path=p
     for k,v in info(p,listdir=True,listlinks=links).items():
       self[k]=v
@@ -126,7 +126,7 @@ class recurse_info:
       return myD==otD
     except:
       return False
-def delete(path):
+def delete(path:str):
   """Удалить папку или файл, если существует"""
   if _os.path.exists(path):
     if _os.path.islink(path):
@@ -139,7 +139,7 @@ def delete(path):
       raise Exception("Unknown type")
 rm=delete
 # del=delete
-def copy(fr,to):
+def copy(fr:str,to:str):
   """Копировать"""
   if _os.path.isfile(fr):
     _shutil.copy(fr,to)
@@ -148,21 +148,21 @@ def copy(fr,to):
   else:
     raise Exception("Unknown type")
 cp=copy
-def move(fr,to):
+def move(fr:str,to:str):
   """Переместить"""
   _shutil.move(fr,to)
 mv=move
-def rename(fr,to):
+def rename(fr:str,to:str):
   """Переименовать"""
   _os.rename(fr,to)
 rn=rename
-def link(fr,to,force=False):
+def link(fr:str,to:str,force:bool=False):
   """Сделать символическую ссылку"""
   if exists(to) and force:
     delete(to)
   _os.symlink(fr,to)
 ln=link
-def format(path,replace_to=None,sep=pathsep):
+def format(path:str,replace_to:str=None,sep=pathsep)->str:
   """Форматировать путь к файлу (изменить разделитель, удалить недопустимые символы)
   replace_to - заменить недопустимые символы на указанный"""
   for i in ["/","\\"]:

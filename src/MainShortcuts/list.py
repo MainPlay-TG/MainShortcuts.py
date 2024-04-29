@@ -1,9 +1,10 @@
 import re
-def filter(a,whitelist=None,blacklist=[],regex=False,begin=None,end=None):
+def filter(a:list,whitelist:list=None,blacklist:list=[],regex:str=False,begin:str=None,end:str=None):
   """Фильтровать список
   whitelist - удалить всё, чего нет в этом списке
   blacklist - удалить всё, что есть в этом списке
   regex - сортировка с регулярным выражением (строки)"""
+  a=list(a)
   if whitelist==None:
     whitelist=a
   if type(whitelist)==str:
@@ -46,7 +47,7 @@ def filter(a,whitelist=None,blacklist=[],regex=False,begin=None,end=None):
     if add:
       b.append(i)
   return b
-def rm_duplicates(a,trim=False,case=False,func=lambda i:i):
+def rm_duplicates(a:list,trim:bool=False,case:bool=False,func=lambda i:i):
   """Удалить дублирующиеся элементы
   trim - True: использовать strip()
          l: использовать lstrip()

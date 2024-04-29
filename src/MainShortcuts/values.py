@@ -1,7 +1,7 @@
 """Модифицированные версии встроенных значений"""
 import builtins,json
 class int:
-  def __init__(self,data=0):
+  def __init__(self,data:int=0):
     self.data=builtins.int(data)
   def __repr__(self):
     return f"ms.values.int({json.dumps(self.data)})"
@@ -178,7 +178,7 @@ class int:
     else:
       return self.data.__xor__(other)
 class float:
-  def __init__(self,data=0.0):
+  def __init__(self,data:float=0.0):
     self.data=builtins.float(data)
   def __repr__(self):
     return f"ms.values.float({json.dumps(self.data)})"
@@ -301,7 +301,7 @@ class float:
     else:
       return self.data.__truediv__(other)
 class str:
-  def __init__(self,data=""):
+  def __init__(self,data:str=""):
     self.data=builtins.str(data)
   def __repr__(self):
     return f"ms.values.str({json.dumps(self.data)})"
@@ -367,7 +367,7 @@ class str:
     else:
       return self.data.__rmul__(other)
 class list:
-  def __init__(self,data=[]):
+  def __init__(self,data:list=[]):
     self.data=builtins.list(data)
   def __repr__(self):
     return f"ms.values.list({json.dumps(self.data)})"
@@ -433,7 +433,7 @@ class list:
     else:
       return self.data.__rmul__(other)
 class dict:
-  def __init__(self,data={}):
+  def __init__(self,data:dict={}):
     self.data=builtins.dict(data)
   def __repr__(self):
     return f"ms.values.dict({json.dumps(self.data)})"

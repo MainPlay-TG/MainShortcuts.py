@@ -1,7 +1,8 @@
+from typing import Union
 import MainShortcuts.path as m_path
 import os as _os
 import shutil as _shutil
-def create(path,force=False):
+def create(path:str,force:bool=False)->bool:
   """Создать папку
   Если путь существует, ничего не делает
   force - принудительно создать папку (удалит файл, который находится на её месте)"""
@@ -16,7 +17,7 @@ def create(path,force=False):
   _os.makedirs(path)
   return True
 mk=create
-def delete(path):
+def delete(path:str):
   """Удалить папку с содержимым
   Если в назначении файл, выдаст ошибку"""
   type=m_path.info(path)["type"]
@@ -25,7 +26,7 @@ def delete(path):
   else:
     raise Exception("Unknown type: "+type)
 rm=delete
-def copy(fr,to,force=False):
+def copy(fr:str,to:str,force:bool=False):
   """Копировать папку с содержимым
   force - принудительно копировать"""
   type=m_path.info(fr)["dir"]
@@ -39,7 +40,7 @@ def copy(fr,to,force=False):
   else:
     raise Exception("Unknown type: "+type)
 cp=copy
-def move(fr,to,force=False):
+def move(fr:str,to:str,force:bool=False):
   """Переместить папку с содержимым
   force - принудительно переместить"""
   type=m_path.info(fr)["dir"]
@@ -52,7 +53,7 @@ def move(fr,to,force=False):
     _shutil.move(fr,to)
   else:
     raise Exception("Unknown type: "+type)
-def rename(fr,to,force=False):
+def rename(fr:str,to:str,force:bool=False):
   """Переименовать папку
   force - принудительно переименовать"""
   t=m_path.info(fr)["dir"]
@@ -65,7 +66,7 @@ def rename(fr,to,force=False):
     _os.rename(fr,to)
   else:
     raise Exception("Unknown type: "+t)
-def list(path,files=True,dirs=True,links=None):
+def list(path:str,files:bool=True,dirs:bool=True,links:Union[bool,None]=None):
   """Получить список содержимого папки
   files - True: включать файлы в список
           False: не показывать файлы в списке

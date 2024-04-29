@@ -8,7 +8,7 @@ class _MainCore:
   .execdir - если программа находится в папке "_internal", указана родительская папка
   .embed - тексты для всраивания MainCore в программу
   .run - запущена ли программа или её импортируют? (использует __name__)"""
-  def __init__(self,color=True,*,__name__,__file__):
+  def __init__(self,color:bool=True,*,__name__,__file__):
     self.args=sys.argv
     self.core_name="MainCore"
     self.core_version=5
@@ -110,7 +110,7 @@ class _MainCore:
         color=False
   def __repr__(self):
     return ms.json.encode({"name":self.core_name,"version":self.core_version},mode="c")
-  def cprint(self,a,start="",**kwargs): # Вывести цветной текст | cprint("Обычный текст, {BLUE}Синий текст")
+  def cprint(self,a:str,start:str="",**kwargs): # Вывести цветной текст | cprint("Обычный текст, {BLUE}Синий текст")
     try:
       b=str(a).rstrip().format(**self.colors)
     except KeyError:
@@ -122,7 +122,7 @@ class _MainCore:
         except KeyError:
           pass
     print(self.colors["RESET"]+self.colors[start]+b.rstrip()+self.colors["RESET"],**kwargs)
-  def cformat(self,a,start=""): # Аналогично cprint, но вывод в return, и нет strip
+  def cformat(self,a:str,start:str="")->str: # Аналогично cprint, но вывод в return, и нет strip
     try:
       b=str(a).format(**self.colors)
     except KeyError:

@@ -10,7 +10,7 @@ sp_kwargs={
   "stdout":_subprocess.PIPE,
   "stderr":_subprocess.PIPE,
   }
-def run(a,*args,**kwargs):
+def run(a,*args,**kwargs)->dict:
   """Запустить процесс (упрощённый subprocess.Popen)"""
   kw=sp_kwargs
   kw.update(kwargs)

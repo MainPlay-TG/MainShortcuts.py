@@ -7,7 +7,7 @@ except Exception as e:
 class hash:
   """Получить контрольные суммы и размер файла
   Может зависнуть при больших файлах"""
-  def __init__(self,path):
+  def __init__(self,path:str):
     if hl_err!=False:
       raise hl_err
     algs=[
@@ -26,8 +26,9 @@ class hash:
       ]
     self.size=os.path.getsize(path)
     with open(path,"rb") as f:
+      b=f.read()
       for i in algs:
-        self[i]=getattr(hl,i)(f.read()).hexdigest()
+        self[i]=getattr(hl,i)(b).hexdigest()
   def __getitem__(self,k):
     return getattr(self,k)
   def __setitem__(self,k,v):
@@ -40,7 +41,7 @@ class fileobj:
     .lines - текстовые линии файла (получить/записать)
     .size - размер файла в байтах. Если force=True и файл отсутствует, возвращает 0
     .exists - существует ли файл?"""
-  def __init__(self,p,encoding="utf-8",force=False,short_names=True):
+  def __init__(self,p:str,encoding:str="utf-8",force:bool=False):
     """
     p - путь к файлу
     encoding - кодировка (при работе с текстом)
@@ -133,7 +134,7 @@ class fileobj:
     return v+f+f2
   def __repr__(self):
     return f"ms.fileobj('{self.path}',encoding='{self.encoding}',force={self.force})"
-  def open(self):
+  def open(self)->bytes:
     """Получить байты из файла"""
     if self.force:
       try:
@@ -145,7 +146,7 @@ class fileobj:
       with open(self.path,"rb") as f:
         a=f.read()
     return a
-  def save(self,v):
+  def save(self,v:bytes):
     """Записать байты в файл"""
     if self.force:
       if os.path.isdir(self.path):
@@ -155,10 +156,10 @@ class fileobj:
     with open(self.path,"wb") as f:
       a=f.write(v)
     return a
-  def read(self):
+  def read(self)->str:
     """Получить текст из файла"""
     return self.open().decode(self.encoding)
-  def write(self,v):
+  def write(self,v:str):
     """Записать текст в файл"""
     return self.save(v.encode(self.encoding))
   def delete(self):
@@ -169,7 +170,7 @@ class fileobj:
       os.remove(self.path)
     elif os.path.isdir(self.path):
       shutil.rmtree(self.path)
-  def move(self,dest,follow=True):
+  def move(self,dest:str,follow:bool=True):
     """Переместить файл
     follow - следовать за файлом"""
     if os.path.exists(dest) and self.force:
@@ -182,7 +183,7 @@ class fileobj:
     shutil.move(self.path,dest)
     if follow:
       self.path=dest
-  def copy(self,dest,follow=False):
+  def copy(self,dest:str,follow:bool=False):
     """Копировать файл
     follow - следовать за файлом"""
     if os.path.exists(dest) and self.force:
@@ -195,7 +196,7 @@ class fileobj:
     shutil.copy(self.path,dest)
     if follow:
       self.path=dest
-  def link(self,dest):
+  def link(self,dest:str):
     """Сделать символическую ссылку на файл"""
     if os.path.exists(dest) and self.force:
       if os.path.islink(dest):
@@ -205,7 +206,7 @@ class fileobj:
       elif os.path.isdir(dest):
         shutil.rmtree(dest)
     os.symlink(self.path,dest)
-  def checksum(self):
+  def checksum(self)->hash:
     """Получить контрольные суммы и размер файла"""
     return hash(self.path)
   cp=copy

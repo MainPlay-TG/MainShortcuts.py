@@ -2,7 +2,7 @@
 \u0420\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0447\u0438\u043A: MainPlay TG
 https://t.me/MainPlay_InfoCh"""
 
-__version_tuple__=(1,6,69)
+__version_tuple__=(1,6,82)
 __depends__={
   "required":[
     "json",
@@ -30,5 +30,5 @@ __scripts__=[
 from MainShortcuts.imports import *
 __all__=imports_all.copy()
 __import_errors__=imports_import_errors.copy()
-__version__="{}.{}.{}".format(*__version_tuple__)
 del imports_all,imports_import_errors
+__version__="{}.{}.{}".format(*__version_tuple__)

@@ -2,7 +2,7 @@ import MainShortcuts.path as m_path
 import os as _os
 import shutil as _shutil
 _open=open
-def read(path,encoding="utf-8"):
+def read(path:str,encoding:str="utf-8"):
   """Прочитать файл как текст
   encoding - кодировка
   Если файла нет, возвращает пустую строку"""
@@ -12,7 +12,7 @@ def read(path,encoding="utf-8"):
   else:
     text=""
   return text
-def write(path,text="",encoding="utf-8",force=False):
+def write(path:str,text:str="",encoding:str="utf-8",force=False):
   """Записать текст в файл
   text - текст для записи
   encoding - кодировка
@@ -22,7 +22,7 @@ def write(path,text="",encoding="utf-8",force=False):
   with _open(path,"wb") as f:
     f.write(str(text).encode(encoding))
   return True
-def open(path):
+def open(path:str):
   """Прочитать файл как байты
   Если файла нет, возвращает пустые байты"""
   if _os.path.isfile(path):
@@ -32,7 +32,7 @@ def open(path):
     content=b""
   return content
 load=open
-def save(path,content=b"",force=False):
+def save(path:str,content=b"",force=False):
   """Записать байты в файл
   content - байты для записи
   force - принудительно создать файл"""
@@ -41,7 +41,7 @@ def save(path,content=b"",force=False):
   with _open(path,"wb") as f:
     f.write(content)
   return True
-def delete(path):
+def delete(path:str):
   """Удалить файл
   Если он не существует, ничего не изменится
   Если на месте папка, выдаст ошибку"""
@@ -52,7 +52,7 @@ def delete(path):
     pass
   else:
     raise Exception("Unknown type: "+type)
-def copy(fr,to,force=False):
+def copy(fr:str,to:str,force:bool=False):
   """Копировать файл
   force - если в месте назначения папка, удалить её"""
   type=m_path.info(fr)["type"]
@@ -62,7 +62,7 @@ def copy(fr,to,force=False):
     _shutil.copy(fr,to)
   else:
     raise Exception("Unknown type: "+type)
-def move(fr,to,force=False):
+def move(fr:str,to:str,force:bool=False):
   """Переместить файл
   force - если в месте назначения папка, удалить её"""
   type=m_path.info(fr)["type"]
@@ -72,7 +72,7 @@ def move(fr,to,force=False):
     _shutil.move(fr,to)
   else:
     raise Exception("Unknown type: "+type)
-def rename(fr,to,force=False):
+def rename(fr:str,to:str,force:bool=False):
   """Переименовать файл
   force - если в месте назначения папка, удалить её"""
   type=m_path.info(fr)["type"]

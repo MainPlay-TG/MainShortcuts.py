@@ -3,7 +3,7 @@ import MainShortcuts.path as m_path
 import json as _json
 import sys as _sys
 _print=print
-def _obj_encoder(obj,recurse=2,func=lambda k:not k.startswith("_")):
+def _obj_encoder(obj,recurse=2,func=lambda k:not k.startswith("_"))->dict:
   """Преобразование объекта в словарь
   obj - сам объект
   recurse - глубина рекурсивной обработки
@@ -33,7 +33,7 @@ def _obj_encoder(obj,recurse=2,func=lambda k:not k.startswith("_")):
       elif recurse>0:
         d[k]=_obj_encoder(v,recurse=recurse-1)
   return d
-def encode(data,mode="c",indent=2,sort=True,force=True,**kwargs):
+def encode(data,mode:str="c",indent:int=2,sort:bool=True,force:bool=True,**kwargs)->str:
   """Данные в текст JSON
   data - данные для кодирования
   mode - c/compress/min/zip: сжатый JSON
@@ -47,19 +47,15 @@ def encode(data,mode="c",indent=2,sort=True,force=True,**kwargs):
   kwargs["sort_keys"]=sort
   if mode in ["c","compress","min","zip"]: # Сжатый
     kwargs["separators"]=[",",":"]
-    t=_json.dumps(data,**kwargs)
   elif mode in ["pretty","p","print","max"]: # Развёрнутый
     kwargs["indent"]=int(indent)
-    t=_json.dumps(data,**kwargs)
-  else: # Без параметров
-    t=_json.dumps(data,**kwargs)
-  return t
-def decode(text,**kwargs):
+  return _json.dumps(data,**kwargs)
+def decode(text:str,**kwargs):
   """Текст JSON в данные
   text - текст для декодирования
   остальные аргументы как в json.loads"""
   return _json.loads(str(text),**kwargs)
-def write(path,data,encoding="utf-8",force=False,**kwargs):
+def write(path:str,data,encoding:str="utf-8",force:bool=False,**kwargs):
   """Записать данные в файл JSON
   path - путь к файлу
   data - данные
@@ -69,24 +65,24 @@ def write(path,data,encoding="utf-8",force=False,**kwargs):
   if m_path.info(path)["type"]=="dir" and force:
     m_path.rm(path)
   return m_file.write(path,encode(data,**kwargs),encoding=encoding)
-def read(path,encoding="utf-8",**kwargs):
+def read(path:str,encoding:str="utf-8",**kwargs):
   """Прочитать данные из JSON файла
   path - путь к файлу
   encoding - кодировка
   остальные аргументы как в ms.json.decode"""
   return decode(m_file.read(path,encoding=encoding),**kwargs)
-def print(data,file=_sys.stdout,mode="p",**kwargs):
+def print(data,file=_sys.stdout,mode:str="p",**kwargs):
   """Вывести данные в stdout в виде JSON
   mode - как в ms.json.encode
   file - как в print"""
   kwargs["mode"]=mode
   _print(encode(data,**kwargs),file=file)
-def rebuild(text,**kwargs):
+def rebuild(text:str,**kwargs):
   """Перестроить текст JSON
   text - сам текст
   остальные аргументы как в ms.json.encode"""
   return encode(decode(text),**kwargs)
-def rewrite(path,encoding="utf-8",**kwargs):
+def rewrite(path:str,encoding:str="utf-8",**kwargs):
   """Перестроить JSON в файле
   path - путь к файлу
   encoding - кодировка

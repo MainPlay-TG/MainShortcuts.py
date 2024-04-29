@@ -1,5 +1,5 @@
 import os as _o
-def listdir(a,listlinks):
+def listdir(a:str,listlinks:bool):
   s=0
   f=[]
   d=[]
