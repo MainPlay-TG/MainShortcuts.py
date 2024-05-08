@@ -22,3 +22,15 @@ def reverse(d:dict)->dict:
   for k in keys:
     r[k]=d[k]
   return r
+def merge(old:dict,new:dict)->dict:
+  """Рекурсиво объединить словари"""
+  out=old.copy()
+  for k,v in new.items():
+    if k in out:
+      if type(out[k])==dict and type(v)==dict:
+        out[k]=merge(out[k],v)
+      else:
+        out[k]=v
+    else:
+      out[k]=v
+  return out

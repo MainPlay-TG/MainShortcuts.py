@@ -1,3 +1,0 @@
-pip install -U mainshortcuts
-sleep 10 
-pip install -U mainshortcuts

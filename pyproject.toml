@@ -1,6 +1,6 @@
 [tool.poetry]
-version = "1.6.82"
-name = "mainshortcuts"
+version = "1.6.89"
+name = "MainShortcuts"
 description = "Simplifying Python Built-in Commands"
 authors = [ "MainPlay TG <xbox.roman6666666666@gmail.com>",]
 readme = "README.md"

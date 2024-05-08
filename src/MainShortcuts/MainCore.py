@@ -25,13 +25,14 @@ class _MainCore:
     self.run=__name__=="__main__" # Запущена программа или её импортируют?
     self.embed=dictplus()
     self.embed.lines=[
-      "from MainShortcuts.MainCore import os, ms, _MainCore, dictplus",
-      "mcore=_MainCore(__name__=__name__,__file__=__file__) # Инициализация MainCore",
-      "cprint, cformat=mcore.cprint, mcore.cformat # Утилиты для вывода цветного текста в консоль",
-      "globals=dictplus() # Глобальные переменные",
-      'cfg=ms.cfg(mcore.execdir+"/cfg.json") # Файл настроек программы',
-      "cfg.default={} # Установка настроек по умолчанию (только если словарь)",
-      "cfg.dload() # Загрузка настроек и заполнение отсутствующих",
+      "from MainShortcuts.MainCore import *",
+      "from MainShortcuts.MainCore import _MainCore",
+      "mcore=_MainCore(__name__=__name__,__file__=__file__)",
+      "cprint,cformat=mcore.cprint,mcore.cformat",
+      "globals=dictplus()",
+      'cfg=ms.cfg(mcore.execdir+"/cfg.json")',
+      "cfg.default={}",
+      "cfg.dload()",
       ]
     self.embed.text="\n".join(self.embed.lines)+"\n" # Текст для встраивания MainCore в программу
     self.color_names=[
