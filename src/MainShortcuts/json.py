@@ -1,6 +1,9 @@
 import MainShortcuts.file as m_file
 import MainShortcuts.path as m_path
-import json as _json
+try:
+  import json5 as _json
+except:
+  import json as _json
 import sys as _sys
 _print = print
 
