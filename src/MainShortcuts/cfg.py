@@ -123,7 +123,7 @@ class cfg:
     else:
       type = _checkType(path, type)
     _checkImport(type)
-    if os.path.dirname(path)!="":
+    if os.path.dirname(path) != "":
       m_dir.create(os.path.dirname(path), force=force)
     if type == "json":
       kw["encoding"] = encoding

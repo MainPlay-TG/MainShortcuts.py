@@ -2,33 +2,33 @@
 \u0420\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0447\u0438\u043A: MainPlay TG
 https://t.me/MainPlay_InfoCh"""
 
-__version_tuple__=(1,6,89)
-__depends__={
-  "required":[
-    "json",
-    "os",
-    "platform",
-    "shutil",
-    "subprocess",
-    "sys",
+__version_tuple__ = (1, 6, 89)
+__depends__ = {
+    "required": [
+        "json",
+        "os",
+        "platform",
+        "shutil",
+        "subprocess",
+        "sys",
     ],
-  "optional":[
-    "colorama",
-    "cPickle",
-    "hashlib",
-    "pickle",
-    "toml",
+    "optional": [
+        "colorama",
+        "cPickle",
+        "hashlib",
+        "pickle",
+        "toml",
     ]
-  }
-__scripts__=[
-  "MS-getCore",
-  "MS-getCoreMini",
-  "MS-jsonC",
-  "MS-jsonP",
-  "MS-mkdir",
-  ]
+}
+__scripts__ = [
+    "MS-getCore",
+    "MS-getCoreMini",
+    "MS-jsonC",
+    "MS-jsonP",
+    "MS-mkdir",
+]
 from MainShortcuts.imports import *
-__all__=imports_all.copy()
-__import_errors__=imports_import_errors.copy()
-del imports_all,imports_import_errors
-__version__="{}.{}.{}".format(*__version_tuple__)
+__all__ = imports_all.copy()
+__import_errors__ = imports_import_errors.copy()
+del imports_all, imports_import_errors
+__version__ = "{}.{}.{}".format(*__version_tuple__)
