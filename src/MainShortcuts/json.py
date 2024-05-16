@@ -2,8 +2,10 @@ import MainShortcuts.file as m_file
 import MainShortcuts.path as m_path
 try:
   import json5 as _json
+  use_json5 = True
 except:
   import json as _json
+  use_json5 = False
 import sys as _sys
 _print = print
 
@@ -57,6 +59,9 @@ def encode(data, mode: str = "c", indent: int = 2, sort: bool = True, force: boo
     kwargs["separators"] = [",", ":"]
   elif mode in ["pretty", "p", "print", "max"]:  # Развёрнутый
     kwargs["indent"] = int(indent)
+  if use_json5:
+    kwargs["quote_keys"] = True
+    kwargs["trailing_commas"] = False
   return _json.dumps(data, **kwargs)
 
 

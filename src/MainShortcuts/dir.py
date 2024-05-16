@@ -84,7 +84,7 @@ def rename(fr: str, to: str, force: bool = False):
     raise Exception("Unknown type: " + t)
 
 
-def list(path: str, extensions: Union[str, list] = None, func=None, *, files: bool = True, dirs: bool = True, links: Union[bool, None] = None):
+def list(path: str = ".", extensions: Union[str, list] = None, func=None, *, files: bool = True, dirs: bool = True, links: Union[bool, None] = None):
   """Получить список содержимого папки
   files      - True: включать файлы в список
                False: не показывать файлы в списке

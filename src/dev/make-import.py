@@ -31,18 +31,26 @@ import_data = {
 lines = [
     '"""Этот файл просто импортирует части модуля',
     'Он создаётся автоматически"""',
+    "import os",
     "import MainShortcuts.main as main",
     "imports_all=[]",
     "imports_import_errors={}",
+    "noimport=[]"
+    'if "MS_NOIMPORT" in os.environ:',
+    '  for i in os.environ["MS_NOIMPORT"].split(","):',
+    "    if i.strip():",
+    "      noimport.append(i.strip().lower())",
+    "noimport.sort()",
 ]
 for code, names in import_data.items():
   for name in names:
     lines += [
-        "try:",
-        "  " + code.format(name=name),
-        "  imports_all.append('{name}')".format(name=name),
-        "except Exception as e:",
-        "  imports_import_errors['{name}']=e".format(name=name),
+        f"if not {name} in noimport:",
+        "  try:",
+        "    " + code.format(name=name),
+        "    imports_all.append('{name}')".format(name=name),
+        "  except Exception as e:",
+        "    imports_import_errors['{name}']=e".format(name=name),
     ]
 lines += [
     "imports_all.sort()",
