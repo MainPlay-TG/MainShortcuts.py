@@ -35,7 +35,7 @@ lines = [
     "import MainShortcuts.main as main",
     "imports_all=[]",
     "imports_import_errors={}",
-    "noimport=[]"
+    "noimport=[]",
     'if "MS_NOIMPORT" in os.environ:',
     '  for i in os.environ["MS_NOIMPORT"].split(","):',
     "    if i.strip():",
@@ -45,7 +45,7 @@ lines = [
 for code, names in import_data.items():
   for name in names:
     lines += [
-        f"if not {name} in noimport:",
+        f"if not '{name}' in noimport:",
         "  try:",
         "    " + code.format(name=name),
         "    imports_all.append('{name}')".format(name=name),
@@ -57,4 +57,4 @@ lines += [
 ]
 with open("imports.py", "wb") as f:
   f.write("\n".join(lines).encode("utf-8"))
-print("Импорт частей модуля собран")
+print("Импорт частей модуля собран в файл " + os.path.abspath("imports.py"))
