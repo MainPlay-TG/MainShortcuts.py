@@ -73,7 +73,7 @@ class cfg:
     data - заранее указанные данные
     default - значения по умолчанию
     type - тип хранения (по умолчанию от расширения файла)"""
-    self.path = path
+    self.path = os.path.abspath(path)
     self.data = data
     self.default = default
     self.type = _checkType(path, type)
