@@ -4,11 +4,12 @@ import_data = {
     "{name}=main.{name}": [
         "cd",
         "clear_ANSI",
-        "cls_ANSI",
         "clear",
+        "cls_ANSI",
         "cls",
         "exit",
-        "pwd"
+        "pwd",
+        "timedelta",
     ],
     "from MainShortcuts.{name} import {name}": [
         "cfg",

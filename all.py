@@ -7,7 +7,7 @@ for i in os.listdir("src"):
     Popen(["nano", f"src/{i}/__init__.py"]).wait()
 Popen(["nano", "pyproject.toml"]).wait()
 Popen(["py", "src/dev/make-import.py"]).wait()
-Popen(["autopep8","-r","src"]).wait()
+Popen(["autopep8","-r","--in-place","src"]).wait()
 Popen(["poetry", "publish", "--build"]).wait()
 Popen(["pip", "install", "-U", package]).wait()
 sleep(10)

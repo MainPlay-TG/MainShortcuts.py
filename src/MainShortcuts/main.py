@@ -1,6 +1,8 @@
+import datetime
 import MainShortcuts.os as m_os
 import os as _os
 import sys as _sys
+from typing import Union
 # Универсальные команды
 exit = _sys.exit
 cd = _os.chdir
@@ -9,7 +11,10 @@ pwd = _os.getcwd
 
 def clear_ANSI():
   print("\u001b[2J")
-
+def timedelta(time:Union[int,float,dict])->datetime.timedelta:
+  if type(time)==dict:
+    return datetime.timedelta(**time)
+  return datetime.timedelta(seconds=time)
 
 cls_ANSI = clear_ANSI
 # Команды для разных ОС
