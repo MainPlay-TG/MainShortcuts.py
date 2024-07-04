@@ -1,3 +1,4 @@
+#!/data/data/com.termux/files/usr/bin/python3
 import os
 from time import sleep
 from subprocess import Popen

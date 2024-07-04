@@ -16,7 +16,7 @@ class _MainCore:
   def __init__(self, color: bool = True, *, __name__, __file__):
     self.args = sys.argv
     self.core_name = "MainCore"
-    self.core_version = 5
+    self.core_version = 6
     self.dir = os.path.dirname(__file__)  # Папка, в которой находится программа
     self.execdir = self.dir  # Если программа собрана через "pyinstaller --onedir", указывает папку с исполняемым файлом
     try:
@@ -29,51 +29,9 @@ class _MainCore:
     self.pid = os.getpid()  # PID программы
     self.run = __name__ == "__main__"  # Запущена программа или её импортируют?
     self.embed = dictplus()
-    self.embed.lines = [
-        "from MainShortcuts.MainCore import *",
-        "from MainShortcuts.MainCore import _MainCore",
-        "mcore=_MainCore(__name__=__name__,__file__=__file__)",
-        "cprint,cformat=mcore.cprint,mcore.cformat",
-        "globals=dictplus()",
-        'cfg=ms.cfg(mcore.execdir+"/cfg.json")',
-        "cfg.default={}",
-        "cfg.dload()",
-    ]
+    self.embed.lines = ["# MainShortcuts/mcore.begin", "from MainShortcuts.MainCore import *", "from MainShortcuts.MainCore import _MainCore", "mcore=_MainCore(__name__=__name__,__file__=__file__)", "cprint,cformat=mcore.cprint,mcore.cformat", "cfg=ms.cfg(mcore.execdir+'/cfg.json')", "cfg.default={}", "cfg.dload()", "# MainShortcuts/mcore.end"]
     self.embed.text = "\n".join(self.embed.lines) + "\n"  # Текст для встраивания MainCore в программу
-    self.color_names = [
-        "",
-        "BG_BLACK",
-        "BG_BLUE",
-        "BG_GREEN",
-        "BG_LIGHTBLACK",
-        "BG_LIGHTBLUE",
-        "BG_LIGHTGREEN",
-        "BG_LIGHTPINK",
-        "BG_LIGHTRED",
-        "BG_LIGHTWHITE",
-        "BG_LIGHTYELLOW",
-        "BG_PINK",
-        "BG_RED",
-        "BG_WHITE",
-        "BG_YELLOW",
-        "BLACK",
-        "BLUE",
-        "GREEN",
-        "HIGH",
-        "LIGHTBLACK",
-        "LIGHTBLUE",
-        "LIGHTGREEN",
-        "LIGHTPINK",
-        "LIGHTRED",
-        "LIGHTWHITE",
-        "LIGHTYELLOW",
-        "LOW",
-        "PINK",
-        "RED",
-        "RESET",
-        "WHITE",
-        "YELLOW",
-    ]
+    self.color_names = ["", "BG_BLACK", "BG_BLUE", "BG_GREEN", "BG_LIGHTBLACK", "BG_LIGHTBLUE", "BG_LIGHTGREEN", "BG_LIGHTPINK", "BG_LIGHTRED", "BG_LIGHTWHITE", "BG_LIGHTYELLOW", "BG_PINK", "BG_RED", "BG_WHITE", "BG_YELLOW", "BLACK", "BLUE", "GREEN", "HIGH", "LIGHTBLACK", "LIGHTBLUE", "LIGHTGREEN", "LIGHTPINK", "LIGHTRED", "LIGHTWHITE", "LIGHTYELLOW", "LOW", "PINK", "RED", "RESET", "WHITE", "YELLOW"]
     self.colors = {}
     for i in self.color_names:
       self.colors[i] = ""
@@ -147,7 +105,7 @@ class _MainCore:
   def ctest(self):  # Вывод всех доступных цветов
     for k, v in self.colors.items():
       if k != "":
-        print("{0}{1}: {2}EXAMPLE ░▒▓ ███{0}".format(self.colors["RESET"], k, v))
+        print("{0}{1}: {2}EXAMPLE \u2591\u2592\u2593 \u2588\u2588\u2588{0}".format(self.colors["RESET"], k, v))
 
   def ignoreException(self, target, *args, **kwargs):
     try:

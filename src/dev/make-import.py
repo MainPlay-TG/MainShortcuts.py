@@ -10,6 +10,7 @@ import_data = {
         "exit",
         "pwd",
         "timedelta",
+        "randfloat",
     ],
     "from MainShortcuts.{name} import {name}": [
         "cfg",
@@ -26,7 +27,8 @@ import_data = {
         "path",
         "proc",
         "str",
-        "win"
+        "utils",
+        "win",
     ]
 }
 lines = [
