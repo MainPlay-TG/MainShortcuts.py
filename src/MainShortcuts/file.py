@@ -1,18 +1,22 @@
 import MainShortcuts.path as m_path
-import os as _os
-import shutil as _shutil
+import os
+import shutil
 _open = open
 
 
-def read(path: str, encoding: str = "utf-8"):
+def read(path: str, encoding: str = "utf-8", force: bool = False):
   """Прочитать файл как текст
   encoding - кодировка
   Если файла нет, возвращает пустую строку"""
-  if _os.path.isfile(path):
+  if force:
+    if os.path.isfile(path):
+      with _open(path, "rb") as f:
+        text = f.read().decode(encoding)
+    else:
+      text = ""
+  else:
     with _open(path, "rb") as f:
       text = f.read().decode(encoding)
-  else:
-    text = ""
   return text
 
 
@@ -21,7 +25,7 @@ def write(path: str, text: str = "", encoding: str = "utf-8", force=False):
   text - текст для записи
   encoding - кодировка
   force - принудительно создать файл"""
-  if _os.path.isdir(path) and force:
+  if os.path.isdir(path) and force:
     m_path.rm(path)
   with _open(path, "wb") as f:
     f.write(str(text).encode(encoding))
@@ -31,7 +35,7 @@ def write(path: str, text: str = "", encoding: str = "utf-8", force=False):
 def open(path: str):
   """Прочитать файл как байты
   Если файла нет, возвращает пустые байты"""
-  if _os.path.isfile(path):
+  if os.path.isfile(path):
     with _open(path, "rb") as f:
       content = f.read()
   else:
@@ -46,7 +50,7 @@ def save(path: str, content=b"", force=False):
   """Записать байты в файл
   content - байты для записи
   force - принудительно создать файл"""
-  if _os.path.isdir(path) and force:
+  if os.path.isdir(path) and force:
     m_path.rm(path)
   with _open(path, "wb") as f:
     f.write(content)
@@ -60,10 +64,13 @@ def delete(path: str):
   type = m_path.info(path)["type"]
   if type == "file":
     m_path.rm(path)
-  elif not _os.path.exists(path):
+  elif not os.path.exists(path):
     pass
   else:
     raise Exception("Unknown type: " + type)
+
+
+rm = delete
 
 
 def copy(fr: str, to: str, force: bool = False):
@@ -73,9 +80,12 @@ def copy(fr: str, to: str, force: bool = False):
   if type == "file":
     if m_path.exists(to) and force:
       m_path.delete(to)
-    _shutil.copy(fr, to)
+    shutil.copy(fr, to)
   else:
     raise Exception("Unknown type: " + type)
+
+
+cp = copy
 
 
 def move(fr: str, to: str, force: bool = False):
@@ -85,9 +95,12 @@ def move(fr: str, to: str, force: bool = False):
   if type == "file":
     if m_path.exists(to) and force:
       m_path.delete(to)
-    _shutil.move(fr, to)
+    shutil.move(fr, to)
   else:
     raise Exception("Unknown type: " + type)
+
+
+mv = move
 
 
 def rename(fr: str, to: str, force: bool = False):
@@ -97,6 +110,6 @@ def rename(fr: str, to: str, force: bool = False):
   if type == "file":
     if m_path.exists(to) and force:
       m_path.delete(to)
-    _os.rename(fr, to)
+    os.rename(fr, to)
   else:
     raise Exception("Unknown type: " + type)
