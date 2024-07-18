@@ -1,7 +1,8 @@
 import MainShortcuts.path as m_path
 import os
 import shutil
-_open = open
+import builtins
+_open = builtins.open
 
 
 def read(path: str, encoding: str = "utf-8", force: bool = False):

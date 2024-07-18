@@ -1,3 +1,5 @@
+import builtins
+import os
 import MainShortcuts.file as m_file
 import MainShortcuts.path as m_path
 try:
@@ -6,7 +8,6 @@ except:
   json5 = None
 import json
 import sys as sys
-_print = print
 
 
 def _obj_encoder(obj, recurse=2, func=lambda k: not k.startswith("_")) -> dict:
@@ -77,9 +78,12 @@ def write(path: str, data, encoding: str = "utf-8", force: bool = False, **kw):
   encoding - кодировка
   force - если в месте назначения папка, удалить её
   остальные аргументы как в ms.json.encode"""
-  if m_path.info(path)["type"] == "dir" and force:
-    m_path.rm(path)
-  return m_file.write(path, encode(data, **kw), encoding=encoding)
+  f_kw = {}
+  f_kw["encoding"] = encoding
+  f_kw["force"] = force
+  f_kw["path"] = path
+  f_kw["text"] = encode(data, **kw)
+  return m_file.write(**f_kw)
 
 
 def read(path: str, encoding: str = "utf-8", **kw):
@@ -95,7 +99,7 @@ def print(data, file=sys.stdout, mode: str = "p", **kw):
   mode - как в ms.json.encode
   file - как в print"""
   kw["mode"] = mode
-  _print(encode(data, **kw), file=file)
+  builtins.print(encode(data, **kw), file=file)
 
 
 def rebuild(text: str, **kw):
