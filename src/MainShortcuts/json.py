@@ -52,23 +52,33 @@ def encode(data, mode: str = "c", indent: int = 2, sort: bool = True, force: boo
   sort - сортировка словарей
   force - преобразовывать объекты в словари
   остальные аргументы как в json.dumps"""
+  mode = mode.lower()
+  kw["obj"] = data
   if force:
     kw["default"] = _obj_encoder
   kw["sort_keys"] = sort
   if mode in ["c", "compress", "min", "zip"]:  # Сжатый
+    kw["indent"] = None
     kw["separators"] = [",", ":"]
-  elif mode in ["pretty", "p", "print", "max"]:  # Развёрнутый
-    kw["indent"] = int(indent)
-  return json.dumps(data, **kw)
+  if mode in ["p", "pretty", "max", "print"]:  # Развёрнутый
+    kw["indent"] = indent
+    kw["separators"] = None
+  if mode in ["mp", "mp_tg", "mainplay", "mainplay_tg"]:  # Стиль MainPlay TG
+    kw["indent"] = indent
+    kw["separators"] = [",", ":"]
+  return json.dumps(**kw)
 
 
-def decode(text: str, **kw):
+def decode(text: str, *, like_json5: bool = True, **kw):
   """Текст JSON в данные
   text - текст для декодирования
+  like_json5 - использовать json5 при наличии
   остальные аргументы как в json.loads"""
-  if json5 != None:
-    return json5.loads(str(text), **kw)
-  return json.loads(str(text), **kw)
+  kw["s"] = text
+  if like_json5:
+    if json5 != None:
+      return json5.loads(**kw)
+  return json.loads(**kw)
 
 
 def write(path: str, data, encoding: str = "utf-8", force: bool = False, **kw):
@@ -98,8 +108,9 @@ def print(data, file=sys.stdout, mode: str = "p", **kw):
   """Вывести данные в stdout в виде JSON
   mode - как в ms.json.encode
   file - как в print"""
+  kw["data"] = data
   kw["mode"] = mode
-  builtins.print(encode(data, **kw), file=file)
+  builtins.print(encode(**kw), file=file)
 
 
 def rebuild(text: str, **kw):
