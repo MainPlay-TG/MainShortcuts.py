@@ -29,7 +29,16 @@ class _MainCore:
     self.pid = os.getpid()  # PID программы
     self.run = __name__ == "__main__"  # Запущена программа или её импортируют?
     self.embed = dictplus()
-    self.embed.lines = ["# MainShortcuts/mcore.begin", "from MainShortcuts.MainCore import *", "from MainShortcuts.MainCore import _MainCore", "mcore=_MainCore(__name__=__name__,__file__=__file__)", "cprint,cformat=mcore.cprint,mcore.cformat", "cfg=ms.cfg(mcore.execdir+'/cfg.json')", "cfg.default={}", "cfg.dload()", "# MainShortcuts/mcore.end"]
+    self.embed.lines = [
+        "# MainShortcuts/mcore.begin",
+        "from MainShortcuts.MainCore import * # os, sys, traceback, ms",
+        "mcore=MainCore(__name__=__name__,__file__=__file__)",
+        "cprint,cformat=mcore.cprint,mcore.cformat",
+        "# MainShortcuts/mcore.end",
+        "cfg=ms.cfg(mcore.execdir+'/cfg.json')",
+        "cfg.default={}",
+        "cfg.dload()"
+    ]
     self.embed.text = "\n".join(self.embed.lines) + "\n"  # Текст для встраивания MainCore в программу
     self.color_names = ["", "BG_BLACK", "BG_BLUE", "BG_GREEN", "BG_LIGHTBLACK", "BG_LIGHTBLUE", "BG_LIGHTGREEN", "BG_LIGHTPINK", "BG_LIGHTRED", "BG_LIGHTWHITE", "BG_LIGHTYELLOW", "BG_PINK", "BG_RED", "BG_WHITE", "BG_YELLOW", "BLACK", "BLUE", "GREEN", "HIGH", "LIGHTBLACK", "LIGHTBLUE", "LIGHTGREEN", "LIGHTPINK", "LIGHTRED", "LIGHTWHITE", "LIGHTYELLOW", "LOW", "PINK", "RED", "RESET", "WHITE", "YELLOW"]
     self.colors = {}
@@ -112,3 +121,6 @@ class _MainCore:
       return target(*args, **kwargs)
     except:
       return self.exception()
+
+
+MainCore = _MainCore

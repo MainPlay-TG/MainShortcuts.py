@@ -1,22 +1,19 @@
-from typing import Union
+import os
+import shutil
 import MainShortcuts.path as m_path
-import os as _os
-import shutil as _shutil
+from typing import Union
 
 
 def create(path: str, force: bool = False) -> bool:
   """Создать папку
   Если путь существует, ничего не делает
   force - принудительно создать папку (удалит файл, который находится на её месте)"""
-  if m_path.exists(path):
-    type = m_path.info(path)["type"]
-    if type == "dir":
-      return True
-    elif force:
-      m_path.delete(path)
-    else:
-      raise Exception("The object exists and is not a folder")
-  _os.makedirs(path)
+  if os.path.isdir(path):
+    return True
+  if force:
+    if os.path.isfile(path):
+      m_path.rm(path)
+  os.makedirs(path)
   return True
 
 
@@ -26,11 +23,10 @@ mk = create
 def delete(path: str):
   """Удалить папку с содержимым
   Если в назначении файл, выдаст ошибку"""
-  type = m_path.info(path)["type"]
-  if type == "dir":
-    _shutil.rmtree(path)
-  else:
-    raise Exception("Unknown type: " + type)
+  if os.path.isdir(path):
+    shutil.rmtree(path)
+  if os.path.exists(path):
+    raise Exception("This is not a dir")
 
 
 rm = delete
@@ -39,16 +35,13 @@ rm = delete
 def copy(fr: str, to: str, force: bool = False):
   """Копировать папку с содержимым
   force - принудительно копировать"""
-  type = m_path.info(fr)["dir"]
-  if type == "dir":
-    if m_path.info(to)["type"] != "dir" and force:
-      try:
-        m_path.delete(to)
-      except:
-        pass
-    _shutil.copytree(fr, to)
+  if os.path.isdir(fr):
+    if force:
+      if not os.path.isdir(to):
+        m_path.rm(to)
+    shutil.copytree(fr, to)
   else:
-    raise Exception("Unknown type: " + type)
+    raise Exception("This is not a dir")
 
 
 cp = copy
@@ -57,35 +50,29 @@ cp = copy
 def move(fr: str, to: str, force: bool = False):
   """Переместить папку с содержимым
   force - принудительно переместить"""
-  type = m_path.info(fr)["dir"]
-  if type == "dir":
-    if m_path.info(to)["type"] != "dir" and force:
-      try:
-        m_path.delete(to)
-      except:
-        pass
-    _shutil.move(fr, to)
+  if os.path.isdir(fr):
+    if force:
+      if not os.path.isdir(to):
+        m_path.rm(to)
+    shutil.move(fr, to)
   else:
-    raise Exception("Unknown type: " + type)
+    raise Exception("This is not a dir")
 
 
 def rename(fr: str, to: str, force: bool = False):
   """Переименовать папку
   force - принудительно переименовать"""
-  t = m_path.info(fr)["dir"]
-  if t == "dir":
-    if m_path.info(to)["type"] != "dir" and force:
-      try:
-        m_path.delete(to)
-      except:
-        pass
-    _os.rename(fr, to)
+  if os.path.isdir(fr):
+    if force:
+      if not os.path.isdir(to):
+        m_path.rm(to)
+    os.rename(fr, to)
   else:
-    raise Exception("Unknown type: " + t)
+    raise Exception("This is not a dir")
 
 
 def list(path: str = ".", extensions: Union[str, list] = None, func=None, *, files: bool = True, dirs: bool = True, links: Union[bool, None] = None):
-  """Получить список содержимого папки
+  """Получить список содержимого папки (пути)
   files      - True: включать файлы в список
                False: не показывать файлы в списке
   dirs       - True: включать папки в список
@@ -98,19 +85,19 @@ def list(path: str = ".", extensions: Union[str, list] = None, func=None, *, fil
                принимает путь к файлу
                возвращает True или False"""
   r = []
-  for i in _os.listdir(path):
+  for i in os.listdir(path):
     i = f"{path}/{i}"
     if links == None:
       pass
     elif links == True:
-      if not _os.path.islink(i):
+      if not os.path.islink(i):
         continue
     elif links == False:
-      if _os.path.islink(i):
+      if os.path.islink(i):
         continue
     else:
       raise Exception('"links" can only be True, False or None')
-    if extensions != None and _os.path.isfile(i):
+    if extensions != None and os.path.isfile(i):
       if type(extensions) == str:
         extensions = [extensions]
       for ext in extensions:
@@ -126,11 +113,11 @@ def list(path: str = ".", extensions: Union[str, list] = None, func=None, *, fil
       r.append(i)
       continue
     if files:
-      if _os.path.isfile(i):
+      if os.path.isfile(i):
         r.append(i)
         continue
     if dirs:
-      if _os.path.isdir(i):
+      if os.path.isdir(i):
         r.append(i)
         continue
   return r

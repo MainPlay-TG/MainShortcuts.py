@@ -1,7 +1,5 @@
 import os
 import sys
-from importlib import import_module
-imports = {}
 if hasattr(sys, "MainShortcuts_imports"):
   for i in sys.MainShortcuts_imports:
     exec(f"import {i}")
@@ -10,7 +8,7 @@ else:
 
 
 def riot(**t_kw):
-  """Run In Another Thread"""
+  """Run In Another Thread (threading)"""
   import threading
   if not "daemon" in t_kw:
     t_kw["daemon"] = False
@@ -29,7 +27,7 @@ def riot(**t_kw):
 
 
 def riop(**p_kw):
-  """Run In Another Process"""
+  """Run In Another Process (multiprocessing)"""
   import multiprocessing
   if not "daemon" in p_kw:
     p_kw["daemon"] = False
@@ -45,13 +43,44 @@ def riop(**p_kw):
       return p
     return wrapper
   return decorator
+# class PingStats:pass
+# def ping(host:str,*,count:int=1,size:int=64,timeout:Union[int,float,timedelta]=10)->PingStats:
+#   import socket
+#   with socket.socket(socket.AF_INET,socket.SOCK_RAW,socket.IPPROTO_ICMP) as sock:
+#     ip=socket.gethostbyname(host)
+#     sock.connect((host))
 
 
-async def async_download_file(url: str, path: str, *, ignore_status: bool = False, delete_on_error: bool = True, chunk_size: int = 1024, **kw) -> int:
+async def async_request(method: str, url: str, *, ignore_status: bool = False, **kw):
+  """aiohttp request"""
   import aiohttp
-  async with aiohttp.request(**kw) as resp:
-    if not ignore_status:
-      resp.raise_for_status()
+  kw["method"] = method
+  kw["url"] = url
+  resp = aiohttp.request(**kw)
+  if not ignore_status:
+    resp.raise_for_status()
+  return resp
+
+
+def sync_request(method: str, url: str, *, ignore_status: bool = False, **kw):
+  """requests request"""
+  import requests
+  kw["method"] = method
+  kw["url"] = url
+  resp = requests.request(**kw)
+  if not ignore_status:
+    resp.raise_for_status()
+  return resp
+
+
+request = sync_request
+
+
+async def async_download_file(url: str, path: str, *, delete_on_error: bool = True, chunk_size: int = 1024, **kw) -> int:
+  kw["url"] = url
+  if not "method" in kw:
+    kw["method"] = "GET"
+  async with async_request(**kw) as resp:
     with open(path, "wb") as fd:
       size = 0
       try:
@@ -66,15 +95,12 @@ async def async_download_file(url: str, path: str, *, ignore_status: bool = Fals
   return size
 
 
-def sync_download_file(url: str, path: str, *, ignore_status: bool = False, delete_on_error: bool = True, chunk_size: int = 1024, **kw) -> int:
-  import requests
+def sync_download_file(url: str, path: str, *, delete_on_error: bool = True, chunk_size: int = 1024, **kw) -> int:
   kw["stream"] = True
   kw["url"] = url
   if not "method" in kw:
     kw["method"] = "GET"
-  with requests.request(**kw) as resp:
-    if not ignore_status:
-      resp.raise_for_status()
+  with sync_request(**kw) as resp:
     with open(path, "wb") as fd:
       size = 0
       try:
