@@ -1,5 +1,7 @@
 import os
 import sys
+import inspect
+from typing import *
 if hasattr(sys, "MainShortcuts_imports"):
   for i in sys.MainShortcuts_imports:
     exec(f"import {i}")
@@ -116,3 +118,14 @@ def sync_download_file(url: str, path: str, *, delete_on_error: bool = True, chu
 
 
 download_file = sync_download_file
+
+
+def args2kwargs(func: Callable, args: Iterable = (), kwargs: dict[str, Any] = {}) -> dict[str, Any]:
+  kw = kwargs.copy()
+  args = list(args)
+  for i in inspect.signature(func).parameters:
+    if not i in kw:
+      kw[i] = args.pop(0)
+  if len(args) > 0:
+    raise TypeError("Too many arguments")
+  return kw
