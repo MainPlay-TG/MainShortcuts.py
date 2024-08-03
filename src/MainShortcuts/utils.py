@@ -1,6 +1,5 @@
 import os
 import sys
-import inspect
 from typing import *
 if hasattr(sys, "MainShortcuts_imports"):
   for i in sys.MainShortcuts_imports:
@@ -120,12 +119,17 @@ def sync_download_file(url: str, path: str, *, delete_on_error: bool = True, chu
 download_file = sync_download_file
 
 
-def args2kwargs(func: Callable, args: Iterable = (), kwargs: dict[str, Any] = {}) -> dict[str, Any]:
+def args2kwargs(func: Callable, args: Iterable = (), kwargs: dict[str, Any] = {}) -> tuple[tuple, dict[str, Any]]:
+  import inspect
   kw = kwargs.copy()
   args = list(args)
+  spec = inspect.getfullargspec(func)
   for i in inspect.signature(func).parameters:
-    if not i in kw:
-      kw[i] = args.pop(0)
+    if i != spec.varargs:
+      if i != spec.varkw:
+        if not i in kw:
+          kw[i] = args.pop(0)
   if len(args) > 0:
-    raise TypeError("Too many arguments")
-  return kw
+    if spec.varargs != None:
+      raise TypeError("Too many arguments")
+  return tuple(args), kw

@@ -27,9 +27,10 @@ for i in os.listdir("change_log"):
         lines.append("Версия {}".format(json["version"]))
       for k,v in md_lang.items():
         if k in json:
-          lines.append("# "+v)
-          for i in json[k]:
-            lines.append("- "+i)
+          if len(json[k])>0:
+            lines.append("## "+v)
+            for i in json[k]:
+              lines.append("- "+i)
       ms.file.write(f"change_log/{filename}.md","\n".join(lines))
 for i in os.listdir("src"):
   if os.path.isfile(f"src/{i}/__init__.py"):
