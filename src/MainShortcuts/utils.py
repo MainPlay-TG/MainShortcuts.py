@@ -133,3 +133,12 @@ def args2kwargs(func: Callable, args: Iterable = (), kwargs: dict[str, Any] = {}
     if spec.varargs != None:
       raise TypeError("Too many arguments")
   return tuple(args), kw
+
+
+def is_async(func: Callable) -> bool:
+  import inspect
+  return inspect.iscoroutinefunction(func)
+
+
+def is_sync(func: Callable) -> bool:
+  return not is_async(func)

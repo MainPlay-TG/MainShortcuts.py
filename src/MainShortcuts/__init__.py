@@ -2,7 +2,7 @@
 \u0420\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0447\u0438\u043A: MainPlay TG
 https://t.me/MainPlayCh"""
 
-__version_tuple__ = (1, 6, 104)
+__version_tuple__ = (1, 7, 0)
 __depends__ = {
     "required": [
         "json",
