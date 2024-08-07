@@ -142,3 +142,24 @@ def is_async(func: Callable) -> bool:
 
 def is_sync(func: Callable) -> bool:
   return not is_async(func)
+
+
+def randfloat(min: float, max: float = None) -> float:
+  from random import random
+  if max == None:
+    max = min
+    min = 0
+  return min + (random() * (max - min))
+
+
+def randstr(length: int, symbols: str = "0123456789abcdefghijklmnopqrstuvwxyz") -> str:
+  from random import choice
+  t = ""
+  while len(t) < length:
+    t += choice(symbols)
+  return t
+
+
+def uuid() -> str:
+  from uuid import uuid4
+  return str(uuid4())
