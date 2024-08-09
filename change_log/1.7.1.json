@@ -3,6 +3,6 @@
   "added": [
     "\u0424\u0443\u043d\u043a\u0446\u0438\u044f `.utils.randfloat`",
     "\u0424\u0443\u043d\u043a\u0446\u0438\u044f `.utils.randstr`",
-    "\u0424\u0443\u043d\u043a\u0446\u0438\u044f `.utilsuuid`"
+    "\u0424\u0443\u043d\u043a\u0446\u0438\u044f `.utils.uuid`"
   ]
 }

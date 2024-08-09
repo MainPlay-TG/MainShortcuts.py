@@ -1,0 +1,8 @@
+{
+  "version": "1.7.2",
+  "added": [
+    "Декоратор `.utils.async2sync`",
+    "Декоратор `.utils.sync2async`",
+    "Функция `.utils.get_my_ip`"
+  ]
+}

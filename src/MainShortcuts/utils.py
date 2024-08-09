@@ -1,5 +1,6 @@
 import os
 import sys
+from functools import wraps
 from typing import *
 if hasattr(sys, "MainShortcuts_imports"):
   for i in sys.MainShortcuts_imports:
@@ -44,12 +45,6 @@ def riop(**p_kw):
       return p
     return wrapper
   return decorator
-# class PingStats:pass
-# def ping(host:str,*,count:int=1,size:int=64,timeout:Union[int,float,timedelta]=10)->PingStats:
-#   import socket
-#   with socket.socket(socket.AF_INET,socket.SOCK_RAW,socket.IPPROTO_ICMP) as sock:
-#     ip=socket.gethostbyname(host)
-#     sock.connect((host))
 
 
 async def async_request(method: str, url: str, *, ignore_status: bool = False, **kw):
@@ -133,6 +128,7 @@ def args2kwargs(func: Callable, args: Iterable = (), kwargs: dict[str, Any] = {}
     if spec.varargs != None:
       raise TypeError("Too many arguments")
   return tuple(args), kw
+# 1.7.0
 
 
 def is_async(func: Callable) -> bool:
@@ -142,6 +138,7 @@ def is_async(func: Callable) -> bool:
 
 def is_sync(func: Callable) -> bool:
   return not is_async(func)
+# 1.7.1
 
 
 def randfloat(min: float, max: float = None) -> float:
@@ -163,3 +160,29 @@ def randstr(length: int, symbols: str = "0123456789abcdefghijklmnopqrstuvwxyz") 
 def uuid() -> str:
   from uuid import uuid4
   return str(uuid4())
+# 1.7.2
+
+
+def async2sync(func: Callable) -> Callable:
+  """Превратить асинхронную функцию в синхронную"""
+  import asyncio
+  import concurrent.futures
+  pool = concurrent.futures.ThreadPoolExecutor()
+
+  def wrapper(*args, **kwargs):
+    return pool.submit(asyncio.run, func(*args, **kwargs)).result()
+  return wrapper
+
+
+def sync2async(func: Callable) -> Callable:
+  """Превратить синхронную функцию в асинхронную"""
+  async def wrapper(*args, **kwargs):
+    return func(*args, **kwargs)
+  return wrapper
+
+
+def get_my_ip() -> str:
+  import requests
+  with requests.get("https://api.ipify.org?format=json") as resp:
+    ip = resp.json()["ip"]
+  return ip
