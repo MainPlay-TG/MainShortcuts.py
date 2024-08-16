@@ -186,3 +186,46 @@ def get_my_ip() -> str:
   with requests.get("https://api.ipify.org?format=json") as resp:
     ip = resp.json()["ip"]
   return ip
+# 1.7.3
+
+
+def middleware(before=None, after=None, ignore_middleware_exceptions: bool = False):
+  """Добавление функций до и после
+  Функция before принимает аргументы func,args,kwargs
+  Функция after принимает аргументы func,result,exception|None"""
+  def decorator(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+      if before != None:
+        try:
+          before(func, args, kwargs)
+        except Exception:
+          if not ignore_middleware_exceptions:
+            raise
+      try:
+        result = func(*args, **kwargs)
+        exc = None
+      except Exception as err:
+        exc = err
+      if after != None:
+        try:
+          after(func, result, exc)
+        except Exception:
+          if not ignore_middleware_exceptions:
+            raise
+      return result
+    return wrapper
+  return decorator
+
+
+def do_nothing(*a, **b):
+  pass
+
+
+def return_False(*a, **b):
+  return False
+
+
+def return_True(*a, **b):
+  return True
+# 1.7.4
