@@ -1,5 +1,5 @@
 [tool.poetry]
-version = "1.7.2"
+version = "1.7.3"
 name = "MainShortcuts"
 description = "Simplifying Python Built-in Commands"
 authors = [ "MainPlay TG <xbox.roman6666666666@gmail.com>",]
