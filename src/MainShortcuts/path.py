@@ -1,13 +1,13 @@
 import MainShortcuts.addon as _a
-import os as _os
-import shutil as _shutil
-sep = _os.sep  # Разделитель в пути файла
-extsep = _os.extsep  # Разделитель в расширении файла
+import os
+import shutil
+sep = os.sep  # Разделитель в пути файла
+extsep = os.extsep  # Разделитель в расширении файла
 pathsep = sep
 separator = sep
-pwd = _os.getcwd
-cd = _os.chdir
-exists = _os.path.exists
+pwd = os.getcwd
+cd = os.chdir
+exists = os.path.exists
 
 
 def merge(array: list, sep: str = pathsep):
@@ -20,7 +20,7 @@ def split(path: str):
   return path.replace("\\", "/").split("/")
 
 
-def info(path: str = _os.getcwd(), listdir: bool = False, listlinks: bool = False) -> dict:
+def info(path: str = ".", listdir: bool = False, listlinks: bool = False) -> dict:
   """Информация о файле/папке
   path - путь к объекту
   listdir - если папка, то рекурсивно создать список содержимого и суммарный размер
@@ -50,13 +50,13 @@ def info(path: str = _os.getcwd(), listdir: bool = False, listlinks: bool = Fals
   errors = {}
   i["path"] = path
   i["split"] = path.split("/")
-  i["dir"], i["fullname"] = _os.path.split(path)
+  i["dir"], i["fullname"] = os.path.split(path)
   try:
-    i["fullpath"] = _os.path.abspath(path)
+    i["fullpath"] = os.path.abspath(path)
   except Exception as e:
     errors["fullpath"] = e
   try:
-    i["relpath"] = _os.path.relpath(path)
+    i["relpath"] = os.path.relpath(path)
   except Exception as e:
     errors["relpath"] = e
   if "." in i["fullname"]:
@@ -70,19 +70,19 @@ def info(path: str = _os.getcwd(), listdir: bool = False, listlinks: bool = Fals
   except Exception as e:
     errors["exists"] = e
   if i["exists"]:
-    i["created"] = _os.path.getctime(path)
-    i["modified"] = _os.path.getmtime(path)
-    i["used"] = _os.path.getatime(path)
-    i["link"] = _os.path.islink(path)
+    i["created"] = os.path.getctime(path)
+    i["modified"] = os.path.getmtime(path)
+    i["used"] = os.path.getatime(path)
+    i["link"] = os.path.islink(path)
     if i["link"]:
       try:
-        i["realpath"] = _os.path.realpath(path)
+        i["realpath"] = os.path.realpath(path)
       except Exception as e:
         errors["realpath"] = e
-    if _os.path.isfile(path):
-      i["size"] = _os.path.getsize(path)
+    if os.path.isfile(path):
+      i["size"] = os.path.getsize(path)
       i["type"] = "file"
-    elif _os.path.isdir(path):
+    elif os.path.isdir(path):
       i["type"] = "dir"
       if listdir:
         tmp = _a.listdir(path, listlinks)
@@ -99,7 +99,7 @@ class recurse_info:
   """Рекурсивная информация о папке
   В разработке"""
 
-  def __init__(self, p: str = _os.getcwd(), links: bool = False):
+  def __init__(self, p: str = os.getcwd(), links: bool = False):
     self.path = p
     for k, v in info(p, listdir=True, listlinks=links).items():
       self[k] = v
@@ -145,13 +145,13 @@ class recurse_info:
 
 def delete(path: str):
   """Удалить папку или файл, если существует"""
-  if _os.path.exists(path):
-    if _os.path.islink(path):
-      _os.unlink(path)
-    elif _os.path.isfile(path):
-      _os.remove(path)
-    elif _os.path.isdir(path):
-      _shutil.rmtree(path)
+  if os.path.exists(path):
+    if os.path.islink(path):
+      os.unlink(path)
+    elif os.path.isfile(path):
+      os.remove(path)
+    elif os.path.isdir(path):
+      shutil.rmtree(path)
     else:
       raise Exception("Unknown type")
 
@@ -162,10 +162,10 @@ rm = delete
 
 def copy(fr: str, to: str):
   """Копировать"""
-  if _os.path.isfile(fr):
-    _shutil.copy(fr, to)
-  elif _os.path.isdir(fr):
-    _shutil.copytree(fr, to)
+  if os.path.isfile(fr):
+    shutil.copy(fr, to)
+  elif os.path.isdir(fr):
+    shutil.copytree(fr, to)
   else:
     raise Exception("Unknown type")
 
@@ -175,7 +175,7 @@ cp = copy
 
 def move(fr: str, to: str):
   """Переместить"""
-  _shutil.move(fr, to)
+  shutil.move(fr, to)
 
 
 mv = move
@@ -183,7 +183,7 @@ mv = move
 
 def rename(fr: str, to: str):
   """Переименовать"""
-  _os.rename(fr, to)
+  os.rename(fr, to)
 
 
 rn = rename
@@ -193,7 +193,7 @@ def link(fr: str, to: str, force: bool = False):
   """Сделать символическую ссылку"""
   if exists(to) and force:
     delete(to)
-  _os.symlink(fr, to)
+  os.symlink(fr, to)
 
 
 ln = link
@@ -208,3 +208,19 @@ def format(path: str, replace_to: str = None, sep=pathsep) -> str:
     for i in ["\n", ":", "*", "?", "\"", "<", ">", "|", "+", "%", "!", "@"]:
       path = path.replace(i, replace_to)
   return path
+# 1.7.4
+
+
+def in_dir(path: str, dir: str, recursion_limit: int = 1000) -> bool:
+  dir = os.path.abspath(dir).replace("\\", "/")
+  path = os.path.abspath(path).replace("\\", "/")
+  while True:
+    pdir = os.path.dirname(path)
+    if path == pdir:
+      return False
+    if dir == pdir:
+      return True
+    path = pdir
+    recursion_limit -= 1
+    if recursion_limit < 0:
+      raise RecursionError()

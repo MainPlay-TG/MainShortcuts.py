@@ -229,3 +229,96 @@ def return_False(*a, **b):
 def return_True(*a, **b):
   return True
 # 1.7.4
+
+
+class MiddlewareBase:
+  def __init__(self, func):
+    self._init(func)
+
+  def _init(self, func):
+    self._args = None
+    self._exception = None
+    self._kwargs = None
+    self._result = None
+    self._traceback = None
+    self.completed_with_exc = None
+    self.completed = False
+    self.func = func
+    self.launched = False
+    if not hasattr(self, "ignore_exceptions"):
+      self.ignore_exceptions = False
+
+  def _check_completed(self):
+    if not self.completed:
+      raise RuntimeError("The function has not yet been completed")
+
+  def _check_launched(self):
+    if not self.completed:
+      raise RuntimeError("The function has not yet been launched")
+
+  def _run(self, args, kwargs):
+    self._args = args
+    self._kwargs = kwargs
+    self.launched = True
+    try:
+      self.before()
+    except Exception:
+      if not self.ignore_exceptions:
+        raise
+    try:
+      self._result = self.func(*args, **kwargs)
+      self.completed_with_exc = False
+    except Exception as e:
+      from traceback import format_exc
+      self._exception = e
+      self._traceback = format_exc()
+      self.completed_with_exc = True
+    self.completed = True
+    try:
+      self.after()
+    except Exception:
+      if not self.ignore_exceptions:
+        raise
+    return self.result
+
+  @property
+  def args(self) -> tuple:
+    self._check_launched()
+    return self._args
+
+  @property
+  def kwargs(self) -> dict[str, Any]:
+    self._check_launched()
+    return self._kwargs
+
+  @property
+  def result(self) -> Any:
+    self._check_completed()
+    if self.completed_with_exc:
+      raise self.exception
+    return self._result
+
+  @property
+  def exception(self) -> Union[None, Exception]:
+    self._check_completed()
+    return self._exception
+
+  @property
+  def traceback(self) -> Union[None, str]:
+    self._check_completed()
+    return self._traceback
+
+  def before(self):
+    pass
+
+  def after(self):
+    pass
+
+
+def middleware_plus(cls: MiddlewareBase):
+  def decorator(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+      return cls(func)._run(args, kwargs)
+    return wrapper
+  return decorator

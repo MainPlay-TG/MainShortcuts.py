@@ -1,0 +1,8 @@
+{
+  "version": "1.7.4",
+  "added": [
+    "Декоратор `.utils.middleware_plus`",
+    "Класс `.utils.MiddlewareBase`",
+    "Функция `.path.in_dir`"
+  ]
+}
