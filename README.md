@@ -1,4 +1,7 @@
 # MainShortcuts
+## Внимание!
+<p style="color:red;">Эта библиотека устарела!</p>Вместо неё используйте [MainShortcuts2](https://github.com/MainPlay-TG/MainShortcuts2.py)
+
 ## Описание
 Сокращение и упрощение встроенных операций Python
 ## Установка
